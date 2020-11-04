@@ -1,7 +1,7 @@
 {
 	"manifest_version": 2,
-	"name": "Mou Fund",
-	"description": "牛逼基金",
+	"name": "大牛基金助手",
+	"description": "大牛基金助手，实时查看你的自选基金涨跌状况，祝你牛气冲天！",
 	"version": "1.0.0",
 	"browser_action": {
 		"default_icon": "icon/5.png",

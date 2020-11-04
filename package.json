@@ -1,7 +1,7 @@
 {
   "name": "mou-fund",
   "version": "1.0.0",
-  "description": "自选基金助手，实时查看你的基金涨跌状况，祝你牛气冲天！",
+  "description": "大牛基金助手，实时查看你的自选基金涨跌状况，祝你牛气冲天！",
   "author": "zswxp32@163.com",
   "license": "MIT",
   "scripts": {
