@@ -1,0 +1,37 @@
+{
+  "name": "mou-fund",
+  "version": "1.0.0",
+  "description": "自选基金助手，实时查看你的基金涨跌状况，祝你牛气冲天！",
+  "author": "zswxp32@163.com",
+  "license": "MIT",
+  "scripts": {
+    "build": "webpack --config webpack.prod.js",
+    "dev": "webpack --config webpack.dev.js",
+    "watch": "webpack -w --config webpack.dev.js"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.0.60",
+    "@types/react": "^16.9.32",
+    "@types/react-dom": "^16.9.6",
+    "css-loader": "^3.4.2",
+    "sass-loader": "^6.0.7",
+    "style-loader": "^0.20.3",
+    "ts-loader": "^4.0.1",
+    "typescript": "^3.8.0",
+    "webpack": "^4.42.1",
+    "webpack-cli": "^3.3.11",
+    "webpack-merge": "^4.2.2"
+  },
+  "dependencies": {
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "axios": "^0.21.0",
+    "axios-jsonp": "^1.0.4",
+    "echarts": "^4.9.0",
+    "echarts-for-react": "^2.0.16",
+    "node-sass": "^4.14.1",
+    "react-beautiful-dnd": "^13.0.0",
+    "react-router-dom": "^5.2.0",
+    "uuid": "^8.3.1"
+  }
+}

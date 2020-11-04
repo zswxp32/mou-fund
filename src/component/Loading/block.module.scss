@@ -1,0 +1,35 @@
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.block_loading {
+  position: relative;
+  display: inline-block;
+  margin: 0 auto;
+}
+
+.block_loading_circle {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin-left: -5px;
+  margin-right: -5px;
+  width: 3px;
+  height: 3px;
+  border-radius: 100%;
+  box-shadow: 0 -10px 0 1px orange,
+    10px 0px orange,
+    0 10px orange,
+    -10px 0 orange,
+    -7px -7px 0 .5px orange,
+    7px -7px 0 1.5px orange,
+    7px 7px orange,
+    -7px 7px orange;
+  animation: spin 1s steps(8) infinite;
+}

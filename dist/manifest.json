@@ -1,0 +1,27 @@
+{
+	"manifest_version": 2,
+	"name": "Mou Fund",
+	"description": "牛逼基金",
+	"version": "1.0.0",
+	"browser_action": {
+		"default_icon": "icon/5.png",
+		"default_popup": "popup.html"
+	},
+	"options_page": "option.html",
+	"background": {
+		"scripts": ["js/background.js"],
+		"persistent": false
+	},
+	"icons": {
+		"16": "icon/1.png",
+		"24": "icon/2.png",
+		"32": "icon/3.png",
+		"48": "icon/4.png",
+		"64": "icon/5.png",
+		"128": "icon/6.png"
+	},
+	"permissions": [
+    "contextMenus",
+    "https://*.eastmoney.com/*"
+	]
+}
