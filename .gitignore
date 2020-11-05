@@ -1,3 +1,7 @@
+.DS_Store
 .vscode/
+build/
 dist/js
+dist/*.html
+dist/manifest.json
 node_modules

@@ -1,26 +1,14 @@
 {
   "name": "mou-fund",
-  "version": "1.0.0",
+  "name_ch": "大牛基金助手",
+  "version": "1.0.2",
   "description": "大牛基金助手，实时查看你的自选基金涨跌状况，祝你牛气冲天！",
   "author": "zswxp32@163.com",
   "license": "MIT",
   "scripts": {
-    "build": "webpack --config webpack.prod.js",
-    "dev": "webpack --config webpack.dev.js",
-    "watch": "webpack -w --config webpack.dev.js"
-  },
-  "devDependencies": {
-    "@types/chrome": "^0.0.60",
-    "@types/react": "^16.9.32",
-    "@types/react-dom": "^16.9.6",
-    "css-loader": "^3.4.2",
-    "sass-loader": "^6.0.7",
-    "style-loader": "^0.20.3",
-    "ts-loader": "^4.0.1",
-    "typescript": "^3.8.0",
-    "webpack": "^4.42.1",
-    "webpack-cli": "^3.3.11",
-    "webpack-merge": "^4.2.2"
+    "dev": "NODE_ENV=development webpack-dev-server --config webpack.dev.js",
+    "build": "NODE_ENV=production webpack --config webpack.prod.js",
+    "pack": "node ./scripts/pack.js"
   },
   "dependencies": {
     "react": "^16.13.1",
@@ -33,5 +21,22 @@
     "react-beautiful-dnd": "^13.0.0",
     "react-router-dom": "^5.2.0",
     "uuid": "^8.3.1"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.0.60",
+    "@types/react": "^16.9.32",
+    "@types/react-dom": "^16.9.6",
+    "css-loader": "^3.4.2",
+    "html-webpack-plugin": "^4.5.0",
+    "pkg-store": "^1.0.1",
+    "sass-loader": "^6.0.7",
+    "shelljs": "^0.8.4",
+    "style-loader": "^0.20.3",
+    "ts-loader": "^4.0.1",
+    "typescript": "^3.8.0",
+    "webpack": "^4.42.1",
+    "webpack-cli": "^3.3.11",
+    "webpack-dev-server": "^3.11.0",
+    "webpack-merge": "^4.2.2"
   }
 }

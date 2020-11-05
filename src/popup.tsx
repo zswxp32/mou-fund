@@ -8,7 +8,6 @@ ReactDOM.render(
     <Router>
       <Switch>
         {PopupRoutes.map((route, i) => {
-          console.log(i, route);
           return (
             <Route
               key={i}

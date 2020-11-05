@@ -1,5 +1,4 @@
-import axios, { AxiosAdapter, AxiosInstance } from 'axios';
-import jsonpAdapter from '../util/jsonp';
+import axios, { AxiosInstance } from 'axios';
 
 const FundApi = {
   FundList: '/FundMNewApi/FundMNFInfo',
@@ -28,16 +27,16 @@ export default class EastMoneyService {
       Version: '2.0.0',
     };
     this.fundAxios = axios.create({
-      baseURL: 'https://fundmobapi.eastmoney.com',
+      baseURL: process.env.NODE_ENV !== 'development' ? 'https://fundmobapi.eastmoney.com' : '/fund',
       timeout: 30 * 1000,
       params: commonParams,
     });
     this.searchAxis = axios.create({
-      baseURL: 'https://fundsuggest.eastmoney.com',
+      baseURL: process.env.NODE_ENV !== 'development' ? 'https://fundsuggest.eastmoney.com' : '/search',
       timeout: 30 * 1000,
     });
     this.stockAxios = axios.create({
-      baseURL: 'https://push2.eastmoney.com/api',
+      baseURL: process.env.NODE_ENV !== 'development' ? 'https://push2.eastmoney.com/api' : '/stock',
       timeout: 30 * 1000,
       params: commonParams,
     });
@@ -54,7 +53,6 @@ export default class EastMoneyService {
 
   static async searchFund(str: string) {
     const res = await this.instance.searchAxis.get(SearchApi.Fund, {
-      // adapter: jsonpAdapter as AxiosAdapter,
       params: {
         m: 9,
         key: str,
@@ -101,7 +99,6 @@ export default class EastMoneyService {
    */
   static async getFundGzDetail(fundId: string) {
     const res = await this.instance.fundAxios.get(FundApi.FundGzDetail, {
-      // adapter: jsonpAdapter as AxiosAdapter,
       params: {
         FCODE: fundId,
         RANGE: 'y',

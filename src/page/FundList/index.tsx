@@ -219,6 +219,6 @@ export default function PageFundList() {
       }
     </div>
   
-    <Version version={'1.0.0'}/>
+    <Version product={PRODUCT} version={VERSION}/>
   </div>;
 }
