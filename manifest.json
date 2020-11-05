@@ -1,7 +1,7 @@
 {
 	"manifest_version": 2,
 	"name": "__NAME__",
-	"description": "大牛基金助手，实时查看你的自选基金涨跌状况，祝你牛气冲天！",
+	"description": "实时查看自选基金涨跌",
 	"version": "__VERSION__",
 	"browser_action": {
 		"default_icon": "icon/5.png",
