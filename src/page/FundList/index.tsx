@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, ReactElement } from 'react';
 import { Link } from 'react-router-dom';
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
@@ -14,7 +14,7 @@ import StorageService from '../../service/storage';
 import '../../style/global.scss';
 import styles from './index.module.scss';
 
-export default function PageFundList() {
+export default function PageFundList() : ReactElement {
   const [editing, setEditing] = useState(false);
   const [searchStr, setSearchStr] = useState('');
   const [searchList, setSearchList] = useState(null);
@@ -157,7 +157,7 @@ export default function PageFundList() {
       {fundList.length > 0
         ? <DragDropContext onDragEnd={onDragEnd}>
           <Droppable droppableId="droppable">
-            {(provided, snapshot) => (
+            {(provided) => (
               <div
                 className={styles.list_body}
                 ref={provided.innerRef}
@@ -169,7 +169,7 @@ export default function PageFundList() {
                     draggableId={item.FCODE}
                     index={index}
                   >
-                    {(provided, snapshot) => (
+                    {(provided) => (
                       <div
                         className={`${styles.list_line} ${index % 2 === 0 ? styles.even : styles.odd}`}
                         ref={provided.innerRef}

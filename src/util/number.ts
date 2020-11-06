@@ -3,7 +3,7 @@ export const toPercentString = (value, percent = false) => {
   let num = value;
   if (typeof value !== 'number') num = parseFloat(value);
   num = num.toFixed(2);
-  let str = num > 0 ? `+${num}` : num;
+  const str = num > 0 ? `+${num}` : num;
   return percent ? `${str}%` : str;
 };
 

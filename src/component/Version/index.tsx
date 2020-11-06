@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import styles from './index.module.scss';
 
-export function Version({ product, version }) {
+export function Version({ product, version }: any) {
   const feecBack = useCallback(() => {
     window.open('https://github.com/zswxp32/mou-fund/issues');
   }, []);

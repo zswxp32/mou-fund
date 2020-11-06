@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import ReactEcharts from 'echarts-for-react';
 
 import { toPercentString, toPercentColor } from '../../util/number';
 import { PageLoading } from '../../component/Loading';

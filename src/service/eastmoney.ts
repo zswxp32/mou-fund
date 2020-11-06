@@ -44,7 +44,7 @@ export default class EastMoneyService {
 
   static _instance: EastMoneyService;
 
-  static get instance() {
+  static get instance(): EastMoneyService {
     if (!this._instance) {
       this._instance = new EastMoneyService();
     }

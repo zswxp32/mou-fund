@@ -4,7 +4,12 @@ import ReactEcharts from 'echarts-for-react';
 import { BlockLoading } from '../../component/Loading';
 import { miniEchartOption } from './options';
 
-export const ChartMini = memo<any>(({ fundId, fundGzDetail }) => {
+type ChartMiniProps = {
+  fundId: string,
+  fundGzDetail: any,
+};
+
+export const ChartMini = memo<ChartMiniProps>(({ fundId, fundGzDetail }: ChartMiniProps) => {
   if (!fundGzDetail)
     return <BlockLoading width='260px' height="50px" />;
   if (fundGzDetail.gzDetail.length === 0)
@@ -22,3 +27,5 @@ export const ChartMini = memo<any>(({ fundId, fundGzDetail }) => {
 ) => {
   return fundId === newFundId && fundGzDetail === newFundGzDetail;
 });
+
+ChartMini.displayName = 'ChartMini';

@@ -14,7 +14,7 @@ export default class StorageService {
     const id = localStorage.getItem('deviceid');
     if (id) return id;
 
-    let newId = uuid();
+    const newId = uuid();
     localStorage.setItem('deviceid', newId);
     return newId;
   }

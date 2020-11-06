@@ -65,6 +65,7 @@ td {
 
   .button {
     display: inline-block;
+    user-select: none;
     margin-right: 4px;
     min-width: 40px;
     height: 28px;

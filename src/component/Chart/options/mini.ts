@@ -9,12 +9,12 @@ for (let i = 0; i < 242; i++) {
     time = new Date((3 * 60 + i - 1) * 60 * 1000);
   }
   const h = time.getHours() < 10 ? `0${time.getHours()}` : time.getHours();
-  const m = time.getMinutes() < 10 ? `0${time.getMinutes()}` : time.getMinutes();;
+  const m = time.getMinutes() < 10 ? `0${time.getMinutes()}` : time.getMinutes();
   timeList.push(`${h}:${m}`);
 }
 
 const miniEchartOption = (fundGzDetail) => {
-  let changeList = [];
+  const changeList = [];
   fundGzDetail.gzDetail.forEach(str => {
     const temp = str.split(',');
     changeList.push(parseFloat(temp[2]));

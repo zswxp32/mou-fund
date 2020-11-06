@@ -1,8 +1,8 @@
-var cid = 1;
+let cid = 1;
 
 function buildParams(params) {
-  var result = [];
-  for (var i in params) {
+  const result = [];
+  for (const i in params) {
     result.push(i + '=' + encodeURIComponent(params[i]));
   }
   return result.join('&');
@@ -10,10 +10,10 @@ function buildParams(params) {
 
 export default function jsonpAdapter(config) {
   return new Promise(function (resolve, reject) {
-    var script = document.createElement('script');
-    var src = config.baseURL + config.url;
+    let script = document.createElement('script');
+    let src = config.baseURL + config.url;
     if (config.params) {
-      var params = buildParams(config.params);
+      const params = buildParams(config.params);
       if (params) {
         src += (src.indexOf('?') >= 0 ? '&' : '?') + params;
       }
@@ -31,9 +31,9 @@ export default function jsonpAdapter(config) {
       }
     }
 
-    var jsonp = 'axiosJsonpCallback' + cid++;
-    var old = window[jsonp];
-    var isAbort = false;
+    const jsonp = 'axiosJsonpCallback' + cid++;
+    const old = window[jsonp];
+    let isAbort = false;
 
     window[jsonp] = function (responseData) {
       window[jsonp] = old;
@@ -42,7 +42,7 @@ export default function jsonpAdapter(config) {
         return;
       }
 
-      var response = {
+      const response = {
         data: responseData,
         status: 200
       }
@@ -50,7 +50,7 @@ export default function jsonpAdapter(config) {
       resolve(response);
     };
 
-    var additionalParams = {
+    const additionalParams = {
       _: (new Date().getTime())
     };
 
@@ -84,4 +84,4 @@ export default function jsonpAdapter(config) {
 
     document.head.appendChild(script);
   });
-};
+}

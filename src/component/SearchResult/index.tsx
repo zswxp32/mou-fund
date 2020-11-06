@@ -4,7 +4,12 @@ import { BlockLoading } from '../../component/Loading';
 
 import styles from './index.module.scss';
 
-const SearchResult = memo<any>(({ list, onItemClick }) => {
+type SearchResultProps = {
+  list: any,
+  onItemClick: any,
+}
+
+const SearchResult = memo<SearchResultProps>(({ list, onItemClick }: SearchResultProps) => {
   if (list === null) return <div className={styles.search_result}>
     <BlockLoading />
   </div>;
@@ -29,5 +34,7 @@ const SearchResult = memo<any>(({ list, onItemClick }) => {
     </ul>
   </div>;
 });
+
+SearchResult.displayName = 'SearchResult';
 
 export default SearchResult;
