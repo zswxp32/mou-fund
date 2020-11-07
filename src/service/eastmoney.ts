@@ -11,7 +11,8 @@ const SearchApi = {
 };
 
 const StockApi = {
-  StockList: '/qt/ulist.np/get',
+  StockList: '/api/qt/ulist.np/get',
+  StockTrends: '/api/qt/stock/trends2/get',
 };
 
 export default class EastMoneyService {
@@ -36,7 +37,7 @@ export default class EastMoneyService {
       timeout: 30 * 1000,
     });
     this.stockAxios = axios.create({
-      baseURL: process.env.NODE_ENV !== 'development' ? 'https://push2.eastmoney.com/api' : '/stock',
+      baseURL: process.env.NODE_ENV !== 'development' ? 'https://push2.eastmoney.com' : '/stock',
       timeout: 30 * 1000,
       params: commonParams,
     });
@@ -122,5 +123,23 @@ export default class EastMoneyService {
       }
     });
     return res.status === 200 ? res.data.data.diff : null;
+  }
+
+  static async getStockTrends(prefix, stockId) {
+    const fields1 = 'f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f11,f12,f13';
+    const fields2 = 'f51,f53,f56,f58';    
+    const secid = `${prefix}.${stockId}`;
+    const res = await this.instance.stockAxios.get(StockApi.StockTrends, {
+      params: {
+        secid,
+        fields1,
+        fields2,
+        iscr: 0,
+        iscca: 0,
+        ndays: 1,
+        forcect: 1,
+      }
+    });
+    return res.status === 200 ? res.data.data : null;
   }
 }

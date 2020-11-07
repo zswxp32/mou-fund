@@ -29,7 +29,7 @@ module.exports = {
   },
   output: {
     path: path.join(__dirname, 'dist'),
-    filename: 'js/[name].js'
+    filename: 'js/[name].js',
   },
   module: {
     rules: [{
@@ -59,12 +59,13 @@ module.exports = {
     ]
   },
   resolve: {
-    extensions: ['.ts', '.tsx', '.js']
+    extensions: ['.ts', '.tsx', '.js', 'jsx']
   },
   plugins: [
     new webpack.DefinePlugin({
       PRODUCT: getName(),
       VERSION: getVersion(),
+      DEV: JSON.stringify(process.env.NODE_ENV === 'development'),
     }),
     new HtmlWebpackPlugin({
       template: './template/index.html',

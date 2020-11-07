@@ -23,6 +23,7 @@ module.exports = {
     }
   },
   rules: {
-    "no-var-requires": 0
+    "@typescript-eslint/no-var-requires": 0,
+    "react/display-name": 0,
   }
 }

@@ -1,7 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { MemoryRouter as Router, Switch, Route } from "react-router-dom";
+import { HashRouter, MemoryRouter, Switch, Route } from "react-router-dom";
 import { PopupRoutes } from './routes';
+
+const Router = DEV ? HashRouter : MemoryRouter;
 
 ReactDOM.render(
   <React.StrictMode>

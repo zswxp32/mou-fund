@@ -8,7 +8,6 @@ ReactDOM.render(
     <Router>
       <Switch>
         {OptionRoutes.map((route, i) => {
-          console.log(i, route);
           return (
             <Route
               key={i}

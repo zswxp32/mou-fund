@@ -35,6 +35,4 @@ const SearchResult = memo<SearchResultProps>(({ list, onItemClick }: SearchResul
   </div>;
 });
 
-SearchResult.displayName = 'SearchResult';
-
 export default SearchResult;

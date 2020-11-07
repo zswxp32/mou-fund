@@ -13,29 +13,37 @@ for (let i = 0; i < 242; i++) {
   timeList.push(`${h}:${m}`);
 }
 
-const miniEchartOption = (fundGzDetail) => {
-  const changeList = [];
-  fundGzDetail.gzDetail.forEach(str => {
-    const temp = str.split(',');
-    changeList.push(parseFloat(temp[2]));
+const candleEchartOption = (data) => {
+  const timeList = [];
+  const priceList = [];
+  const tradList = [];
+  data.trends.forEach(str => {
+    const [time, price, trad] = str.split(',');
+    timeList.push(time);
+    priceList.push(price);
+    tradList.push(trad);
   });
+
+  const toChange = (value: number) => {
+    return 100 * (value - data.prePrice) / data.prePrice;
+  };
 
   return {
     title: {
       show: false,
     },
     grid: {
-      top: 8,
+      top: 4,
       left: 0,
       right: 0,
-      bottom: 8,
+      bottom: 4,
       width: 260,
-      height: 34,
+      height: 24,
       containLabel: true
     },
     tooltip: {
       trigger: 'axis',
-      position: (point, params, dom, rect, size) => [point[0] + 30, point[1] - 20],
+      position: (point) => [point[0] + 30, point[1] - 20],
       backgroundColor: '#ffeee5',
       borderColor: '#ffddcc',
       borderWidth: 1,
@@ -43,13 +51,16 @@ const miniEchartOption = (fundGzDetail) => {
         color: '#333',
         fontSize: 8,
         lineHeight: 14,
+        align: 'left',
       },
       formatter: ([s]) => {
+        const change = toChange(s.value);
         return `
-        时间：${s.axisValue}<br/>
-        涨跌：<span class="${toPercentColor(s.value)}">${toPercentString(s.value, true)}</span><br/>
-        净值：${(fundGzDetail.fundBaseInfo.DWJZ * (1 + parseFloat(s.value) / 100)).toFixed(4)}
-      `;
+          时间：${s.axisValue.split(' ')[1]}<br/>
+          涨跌：<span class="${toPercentColor(change)}">${toPercentString(change, true)}</span><br/>
+          价格：${s.value}<br/>
+          成交：${tradList[s.dataIndex]}手
+        `;
       },
     },
     xAxis: {
@@ -59,10 +70,7 @@ const miniEchartOption = (fundGzDetail) => {
         show: false,
       },
       axisLine: {
-        lineStyle: {
-          color: 'grey',
-          width: 1,
-        }
+        show: false,
       },
       axisTick: {
         show: false,
@@ -71,16 +79,16 @@ const miniEchartOption = (fundGzDetail) => {
     },
     yAxis: {
       type: "value",
-      interval: 5,
+      interval: 100,
       axisLabel: {
         showMinLabel: true,
         showMaxLabel: true,
-        formatter: (value) => toPercentString(value, true),
-        color: (value) => toPercentColor(value),
+        formatter: (value) => toPercentString(toChange(value), true),
+        color: (value) => toPercentColor(toChange(value)),
         fontSize: 10,
       },
-      min: (value) => value.min,
-      max: (value) => value.max,
+      min: (value) => Math.min(value.min, data.prePrice),
+      max: (value) => Math.max(value.max, data.prePrice),
       axisLine: {
         show: false,
       },
@@ -105,7 +113,22 @@ const miniEchartOption = (fundGzDetail) => {
           width: 2,
           color: '#ff9966',
         },
-        data: changeList,
+        data: priceList,
+        markLine: {
+          silent: true,
+          symbol: ['none', 'none'],
+          lineStyle: {
+            color: '#666',
+            type: "solid",
+          },
+          data: [{
+            yAxis: data.prePrice
+          }],
+          label: {
+            show: false,
+          },
+        },
+
         markPoint: {
           symbol: 'circle',
           symbolSize: 4,
@@ -131,4 +154,4 @@ const miniEchartOption = (fundGzDetail) => {
   };
 };
 
-export default miniEchartOption;
+export default candleEchartOption;

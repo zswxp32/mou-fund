@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { ReactElement, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
+import { useLatest } from '../../util/hooks';
 import { toPercentString, toPercentColor } from '../../util/number';
 import { PageLoading } from '../../component/Loading';
 import { Back } from '../../component/Back';
@@ -8,33 +9,44 @@ import EastMoneyService from '../../service/eastmoney';
 
 import '../../style/global.scss';
 import styles from './index.module.scss';
+import { ChartCandle } from '../../component/Chart';
 
-export default function PageFundDetail() {
+type StockInfo = {
+  list: any[],
+  stockProportionTotal: string,
+  stockIncomeEstimated: string,
+}
+
+export default function PageFundDetail(): ReactElement {
   const { fundId } = useParams();
-  const [fundInfo, setFundInfo] = useState(null);
+  const [stockInfos, setStockInfos] = useState<StockInfo>(null);
+  const [stockTrends, setStockTrends] = useState({});
+
+  const stockTrendsLatest = useLatest(stockTrends);
 
   useEffect(() => {
     const load = async () => {
       const fundStocks = await EastMoneyService.getFundStocks(fundId);
-      const stockListRes = await EastMoneyService.getStockList(fundStocks);
+      const stockInfosRes = await EastMoneyService.getStockList(fundStocks);
 
       let stockProportionTotal = 0;
       let stockIncomeEstimated = 0;
 
-      const stockList = fundStocks.map((item, index) => {
+      const _stockInfos = fundStocks.map((item, index) => {
         stockProportionTotal += parseFloat(item.JZBL);
-        stockIncomeEstimated += item.JZBL * stockListRes[index].f3 / 100;
+        stockIncomeEstimated += item.JZBL * stockInfosRes[index].f3 / 100;
         return {
           name: item.GPJC,
           code: item.GPDM,
-          price: stockListRes[index].f2,
-          change: stockListRes[index].f3.toFixed(2),
           proportion: item.JZBL,
+          price: stockInfosRes[index].f2,
+          change: stockInfosRes[index].f3.toFixed(2),
+          type: stockInfosRes[index].f13,
         };
       });
 
-      setFundInfo({
-        stockList,
+      setStockInfos({
+        list: _stockInfos,
         stockProportionTotal: stockProportionTotal.toFixed(2),
         stockIncomeEstimated: stockIncomeEstimated.toFixed(2),
       });
@@ -42,50 +54,69 @@ export default function PageFundDetail() {
     load();
   }, [fundId]);
 
-  if (fundInfo == null) return <PageLoading />;
+  useEffect(() => {
+    if (stockInfos === null) return;
+    stockInfos.list.forEach(async (item) => {
+      if (!stockTrendsLatest.current[item.code]) {
+        const stockTrendsRes = await EastMoneyService.getStockTrends(item.type, item.code);
+        setStockTrends({
+          ...stockTrendsLatest.current,
+          [item.code]: stockTrendsRes,
+        });
+      }
+    });
+  }, [stockInfos, stockTrendsLatest]);
+
+  if (stockInfos == null) return <PageLoading />;
 
   return (
     <div className="container">
       <Back />
-      <div className={styles.title}>
-        重仓股票明细
+      <div className={styles.title}>重仓股票明细</div>
+
+      <div className={styles.list}>
+        <div className={styles.list_header}>
+          <div className={styles.list_line}>
+            <div className="tl">股票名称 (代码)</div>
+            <div className={styles.chart}>涨跌走势图</div>
+            <div>价格</div>
+            <div>涨跌幅</div>
+            <div>持仓占比</div>
+          </div>
+        </div>
+        <div className={styles.list_body}>
+          {stockInfos.list.map((item, index) => (
+            <div key={item.code} className={`${styles.list_line} ${index % 2 === 0 ? styles.even : styles.odd}`}>
+              <div>
+                <p className="bold">{item.name} ({item.code})</p>
+              </div>
+              <div className={styles.chart} style={{ fontSize: 0 }}>
+                <ChartCandle stockId={item.code} stockCandleData={stockTrends[item.code]} />
+              </div>
+              <div>
+                <p>{item.price}</p>
+              </div>
+              <div>
+                <p className={`bold ${toPercentColor(item.change)}`}>{toPercentString(item.change, true)}</p>
+              </div>
+              <div>
+                <p>{item.proportion}%</p>
+              </div>
+            </div>))}
+        </div>
+        <div className={styles.list_footer}>
+          <p>
+            <span>重仓股票仓位：</span>
+            <span>{stockInfos.stockProportionTotal}%</span>
+          </p>
+          <p>
+            <span>重仓股票涨跌：</span>
+            <span className={`${toPercentColor(stockInfos.stockIncomeEstimated)}`}>
+              {toPercentString(stockInfos.stockIncomeEstimated, true)}
+            </span>
+          </p>
+        </div>
       </div>
-      <table className={styles.stock_list}>
-        <thead>
-          <tr>
-            <th className="tl">股票名称 (代码)</th>
-            <th>价格</th>
-            <th>涨跌幅</th>
-            <th>持仓占比</th>
-          </tr>
-        </thead>
-        <tbody>
-          {fundInfo.stockList.map((item, index) => (
-            <tr className={index % 2 === 0 ? styles.even : styles.odd} key={item.code}>
-              <td className="tl bold">{item.name} ({item.code})</td>
-              <td>{item.price}</td>
-              <td className={`bold ${toPercentColor(item.change)}`}>
-                {toPercentString(item.change, true)}
-              </td>
-              <td>{item.proportion} %</td>
-            </tr>
-          ))}
-        </tbody>
-        <tfoot>
-          <tr>
-            <td className="tl bold" colSpan={2}>
-              <span>重仓股票仓位：</span>
-              <span>{fundInfo.stockProportionTotal} %</span>
-            </td>
-            <td className={`tr bold`} colSpan={2}>
-              <span>重仓股票涨跌：</span>
-              <span className={`${toPercentColor(fundInfo.stockIncomeEstimated)}`}>
-                {toPercentString(fundInfo.stockIncomeEstimated, true)}
-                </span>
-            </td>
-          </tr>
-        </tfoot>
-      </table>
     </div>
   );
 }

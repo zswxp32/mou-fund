@@ -5,3 +5,4 @@ declare module '*.scss' {
 
 declare const VERSION: string;
 declare const PRODUCT: string;
+declare const DEV: boolean;
