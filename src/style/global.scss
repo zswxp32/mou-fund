@@ -81,5 +81,11 @@ td {
       color: #fff;
       background: #cc4400;
     }
+    &:active {
+      color: #fff;
+      background: #cc0000;
+      position: relative;
+      top: 1px;
+    }
   }
 }

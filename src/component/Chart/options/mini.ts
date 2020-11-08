@@ -29,13 +29,13 @@ const miniEchartOption = (fundGzDetail) => {
       left: 0,
       right: 0,
       bottom: 8,
-      width: 260,
+      width: 240,
       height: 34,
       containLabel: true
     },
     tooltip: {
       trigger: 'axis',
-      position: (point, params, dom, rect, size) => [point[0] + 30, point[1] - 20],
+      position: (point) => [point[0] + 30, point[1] - 20],
       backgroundColor: '#ffeee5',
       borderColor: '#ffddcc',
       borderWidth: 1,
@@ -46,10 +46,10 @@ const miniEchartOption = (fundGzDetail) => {
       },
       formatter: ([s]) => {
         return `
-        时间：${s.axisValue}<br/>
-        涨跌：<span class="${toPercentColor(s.value)}">${toPercentString(s.value, true)}</span><br/>
-        净值：${(fundGzDetail.fundBaseInfo.DWJZ * (1 + parseFloat(s.value) / 100)).toFixed(4)}
-      `;
+          时间：${s.axisValue}<br/>
+          涨跌：<span class="${toPercentColor(s.value)}">${toPercentString(s.value, true)}</span><br/>
+          净值：${(fundGzDetail.fundBaseInfo.DWJZ * (1 + parseFloat(s.value) / 100)).toFixed(4)}
+        `;
       },
     },
     xAxis: {

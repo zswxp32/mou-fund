@@ -3,7 +3,8 @@ import { Link } from 'react-router-dom';
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 import { useLatest } from '../../util/hooks';
-import { toPercentString, toPercentColor } from '../../util/number';
+import { toPercentString, toPercentColor, toGainPercentString, toNumberColor } from '../../util/number';
+import { Fund, FundList } from '../../model/fund';
 import { PageLoading } from '../../component/Loading';
 import { ChartMini } from '../../component/Chart';
 import { Version } from '../../component/Version';
@@ -14,21 +15,22 @@ import StorageService from '../../service/storage';
 import '../../style/global.scss';
 import styles from './index.module.scss';
 
-export default function PageFundList() : ReactElement {
+export default function PageFundList(): ReactElement {
   const [editing, setEditing] = useState(false);
   const [searchStr, setSearchStr] = useState('');
   const [searchList, setSearchList] = useState(null);
   const [searchBoxShow, setSearchBoxShow] = useState(false);
 
   const [fundIds, setFundIds] = useState(StorageService.getFundIds());
-  const [fundList, setFundList] = useState(null);
+  const [fundHolds, setFundHolds] = useState(StorageService.getFundHolds());
+  const [fundList, setFundList] = useState<FundList>(null);
   const [fundGzDetails, setFundGzDetails] = useState({});
 
   const fundGzDetailsLatest = useLatest(fundGzDetails);
 
   useEffect(() => {
     const loadList = async () => {
-      let list = [];
+      let list: FundList = new FundList('', []);
       if (fundIds.length !== 0) {
         list = await EastMoneyService.getFundList(fundIds);
       }
@@ -80,23 +82,24 @@ export default function PageFundList() : ReactElement {
   const onDragEnd = useCallback((result) => {
     if (!result.destination || !result.source) return;
 
-    const listCopyed = Array.from(fundList);
-    const [removed] = listCopyed.splice(result.source.index, 1);
-    listCopyed.splice(result.destination.index, 0, removed);
+    const itemsCopyed = Array.from(fundList.items);
+    const [removed] = itemsCopyed.splice(result.source.index, 1);
+    itemsCopyed.splice(result.destination.index, 0, removed);
 
-    setFundList(listCopyed);
-    StorageService.resetFundIds(listCopyed.map((item: any) => item.FCODE));
+    setFundList(fundList.setItems(itemsCopyed));
+    StorageService.resetFundIds(itemsCopyed.map((item: Fund) => item.code));
   }, [fundList]);
 
   const onSearchChange = useCallback((e) => {
     setSearchStr(e.target.value);
   }, []);
 
-  const onSearchCancle = useCallback((e) => {
+  const onSearchCancle = useCallback(() => {
     setTimeout(() => setSearchStr(''), 100);
   }, []);
 
   const onSearchItemClick = useCallback((fundId) => {
+    setFundHolds(StorageService.addFundHold({ code: fundId, hold: 0, cost: 0 }));
     setFundIds(StorageService.addFundById(fundId));
     setSearchStr('');
   }, []);
@@ -112,6 +115,15 @@ export default function PageFundList() : ReactElement {
 
   const onDelete = useCallback((fundId) => {
     setFundIds(StorageService.deleteFundById(fundId));
+  }, []);
+
+  const onHoldChange = useCallback((fundId, key, value) => {
+    const val = value.trim();
+    if (isNaN(val / 1)) return;
+    setFundHolds(StorageService.updateFundHold({
+      code: fundId,
+      [key]: val / 1,
+    }));
   }, []);
 
   if (fundList == null) return <PageLoading />;
@@ -132,12 +144,12 @@ export default function PageFundList() : ReactElement {
         ? <SearchResult list={searchList} onItemClick={onSearchItemClick} />
         : null
       }
-      {fundList.length > 0
+      {fundList.items.length > 0
         ? <div className={styles.buttons}>
           <span className="button" onClick={() => onEditClick(!editing)}>
             {!editing ? '编辑' : '完成'}
           </span>
-          <span className="button" onClick={onRefreshClick}>刷新</span>
+          {!editing && <span className="button" onClick={onRefreshClick}>刷新</span>}
         </div>
         : null
       }
@@ -147,14 +159,29 @@ export default function PageFundList() : ReactElement {
       <div className={styles.list_header}>
         <div className={styles.list_line}>
           <div className="tl">基金</div>
-          <div className={styles.chart}>涨跌走势图</div>
-          <div>净值</div>
-          <div>估值</div>
+
+          {!editing && <div className={styles.chart}>涨跌走势图</div>}
+
+          <div>持有总额</div>
+          <div>持有收益</div>
+
+          {!editing && <div>
+            <p>净值</p>
+            {fundList.jzrq && <p className={styles.gz_data}>{fundList.jzrq}</p>}
+          </div>}
+          {!editing && <div>
+            <p>估值</p>
+            {fundList.gzrq && <p className={styles.gz_data}>{fundList.gzrq}</p>}
+          </div>}
+          {!editing && <div>收益</div>}
+
+          {editing ? <div>持有份额</div> : null}
+          {editing ? <div>持有单价</div> : null}
           {editing ? <div>删除</div> : null}
         </div>
       </div>
 
-      {fundList.length > 0
+      {fundList.items.length > 0
         ? <DragDropContext onDragEnd={onDragEnd}>
           <Droppable droppableId="droppable">
             {(provided) => (
@@ -163,12 +190,10 @@ export default function PageFundList() : ReactElement {
                 ref={provided.innerRef}
                 {...provided.droppableProps}
               >
-                {fundList.map((item, index) => (
-                  <Draggable
-                    key={item.FCODE}
-                    draggableId={item.FCODE}
-                    index={index}
-                  >
+                { fundList.items.map((item, index) => {
+                  const { hold, cost } = fundHolds[item.code];
+                  const { code, name, jz, jzzzl, gz, gzzzl, updated } = item;
+                  return <Draggable key={code} draggableId={code} index={index}>
                     {(provided) => (
                       <div
                         className={`${styles.list_line} ${index % 2 === 0 ? styles.even : styles.odd}`}
@@ -178,34 +203,71 @@ export default function PageFundList() : ReactElement {
                       >
                         <div>
                           <p className="bold">
-                            <Link className={styles.fund_link} to={`/fund/detail/${item.FCODE}`}>
-                              {item.SHORTNAME}
-                            </Link>
+                            <Link className={styles.fund_link} to={`/fund/detail/${code}`}>{name}</Link>
                           </p>
-                          <p>{item.FCODE}</p>
+                          <p>{code}</p>
                         </div>
-                        <div className={styles.chart} style={{ fontSize: 0 }}>
-                          <ChartMini fundId={item.FCODE} fundGzDetail={fundGzDetails[item.FCODE]} />
-                        </div>
-                        <div>
-                          <p>{item.NAV}</p>
-                          <p className={`bold ${toPercentColor(item.NAVCHGRT)}`}>{toPercentString(item.NAVCHGRT, true)}</p>
-                        </div>
-                        <div>
-                          <p>{item.GSZ}</p>
-                          <p className={`bold ${toPercentColor(item.GSZZL)}`}>
-                            {toPercentString(item.GSZZL, true)}
-                          </p>
-                        </div>
-                        { editing && <div>
-                          <span className={styles.delete_button} onClick={() => onDelete(item.FCODE)}>
-                            🗑️
-                            </span>
+
+                        { !editing && <div className={styles.chart} style={{ fontSize: 0 }}>
+                          <ChartMini fundId={code} fundGzDetail={fundGzDetails[code]} />
                         </div>}
+
+                        <div>{(jz * hold).toFixed(2)}</div>
+                        <div>
+                          {(cost != 0 && hold != 0) && <p className={`bold ${toNumberColor((jz - cost) * hold)}`}>
+                            {((jz - cost) * hold).toFixed(2)}
+                          </p>}
+                          <p className={`bold ${toPercentColor(toGainPercentString(jz, cost))}`}>
+                            {toGainPercentString(jz, cost, true) || '未配置'}
+                          </p>
+                        </div>
+
+                        { !editing && <div>
+                          <p>{jz}</p>
+                          <p className={`bold ${toPercentColor(jzzzl)}`}>
+                            {toPercentString(jzzzl, true)}
+                          </p>
+                        </div>}
+                        { !editing && <div>
+                          <p>{gz}</p>
+                          <p className={`bold ${toPercentColor(gzzzl)}`}>
+                            {toPercentString(gzzzl, true)}
+                          </p>
+                        </div>}
+                        { !editing && (!updated
+                          ? <div className={`bold ${toNumberColor((gz - jz) * hold)}`}>
+                            {((gz - jz) * hold).toFixed(2)}
+                          </div>
+                          : <div className={`bold ${toNumberColor((jz - jz / (1 + jzzzl / 100)) * hold)}`}>
+                            {((jz - jz / (1 + jzzzl / 100)) * hold).toFixed(2)}
+                          </div>)}
+
+                        { editing && <div>
+                          <input
+                            type="text"
+                            className={styles.edit_input}
+                            defaultValue={hold}
+                            onChange={(e) => onHoldChange(code, 'hold', e.target.value)}
+                          />
+                        </div>}
+                        { editing && <div>
+                          <input
+                            type="text"
+                            className={styles.edit_input}
+                            defaultValue={cost}
+                            onChange={(e) => onHoldChange(code, 'cost', e.target.value)}
+                          />
+                        </div>}
+                        { editing && <div>
+                          <span className={styles.delete_button} onClick={() => onDelete(code)}>🗑️</span>
+                        </div>}
+                        { !editing && updated
+                          ? <span className={styles.updated}>净值已更新</span>
+                          : <span className={styles.un_updated}>净值未更新</span>}
                       </div>
                     )}
-                  </Draggable>
-                ))}
+                  </Draggable>;
+                })}
                 {provided.placeholder}
               </div>
             )}
@@ -218,7 +280,7 @@ export default function PageFundList() : ReactElement {
         </div>
       }
     </div>
-  
-    <Version product={PRODUCT} version={VERSION}/>
+
+    <Version product={PRODUCT} version={VERSION} />
   </div>;
 }

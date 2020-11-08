@@ -77,7 +77,7 @@
   left: 0;
   top: 0;
   width: 100%;
-  height: 30px;
+  height: 40px;
   background: #ff9966;
 
   .list_line {
@@ -86,16 +86,29 @@
     &>div {
       color: #fff;
       font-weight: bold;
-      font-size: 13px;
+      font-size: 12px;
+
+      p {
+        color: #fff;
+        line-height: 12px;
+
+        &.gz_data {
+          color: #eee;
+          transform: scale(0.8);
+          position: relative;
+          top: 3px;
+        }
+      }
     }
   }
 }
 
 .list_body {
-  margin-top: 30px;
+  margin-top: 40px;
   min-height: 300px;
 
   .list_line {
+    position: relative;
     height: 50px;
 
     &.even {
@@ -114,6 +127,36 @@
     justify-content: center;
     text-align: center;
   }
+
+  span.updated {
+    width: 66px;
+    height: 14px;
+    line-height: 14px;
+    background: red;
+    border-bottom-left-radius: 5px;
+    color: #fff;
+    font-size: 12px;
+    text-align: center;
+    position: absolute;
+    right: 0;
+    top: 0px;
+    opacity: 0.6;
+  }
+
+  span.un_updated {
+    width: 66px;
+    height: 14px;
+    line-height: 14px;
+    background: #333;
+    border-bottom-left-radius: 5px;
+    color: #fff;
+    font-size: 12px;
+    text-align: center;
+    position: absolute;
+    right: 0;
+    top: 0px;
+    opacity: 0.2;
+  }
 }
 
 .list_line>div {
@@ -128,7 +171,7 @@
   &:nth-child(1) {
     text-align: left;
     padding-left: 6px;
-    width: 150px;
+    width: 140px;
   }
 
   &.chart {
@@ -138,4 +181,20 @@
 
 .delete_button {
   cursor: pointer;
+}
+
+.edit_input {
+  display: block;
+  width: 60px;
+  height: 24px;
+  line-height: 30px;
+  padding: 0 4px;
+  border: 1px solid #ccc;
+  background: #f7f7f7;
+
+  &:focus {
+    outline: none;
+    border-color: orange;
+    box-shadow: 0 0 3px orange;
+  }
 }

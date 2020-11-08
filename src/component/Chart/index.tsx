@@ -15,12 +15,11 @@ type ChartCandleProps = {
 };
 
 export const ChartMini = memo<ChartMiniProps>(({ fundId, fundGzDetail }: ChartMiniProps) => {
-  if (!fundGzDetail) return <BlockLoading width='260px' height="50px" />;
-  if (fundGzDetail.gzDetail.length === 0)
-    return <div style={{ color: 'grey' }}>暂无走势图</div>;
+  if (!fundGzDetail) return <BlockLoading width='240px' height="50px" />;
+  if (fundGzDetail.gzDetail.length === 0) return <div style={{ color: 'grey' }}>暂无走势图</div>;
 
   return <ReactEcharts
-    style={{ display: 'inline-block', width: '260px', height: '50px', margin: '0 auto' }}
+    style={{ display: 'inline-block', width: '240px', height: '50px', margin: '0 auto' }}
     option={miniEchartOption(fundGzDetail)}
   />;
 }, (
@@ -31,9 +30,9 @@ export const ChartMini = memo<ChartMiniProps>(({ fundId, fundGzDetail }: ChartMi
 });
 
 export const ChartCandle = memo<ChartCandleProps>(({ stockId, stockCandleData }: ChartCandleProps) => {
-  if (!stockCandleData) return <BlockLoading width='260px' height="32px" />;
+  if (!stockCandleData) return <BlockLoading width='240px' height="32px" />;
   return <ReactEcharts
-    style={{ display: 'inline-block', width: '260px', height: '32px', margin: '0 auto' }}
+    style={{ display: 'inline-block', width: '240px', height: '32px', margin: '0 auto' }}
     option={candleEchartOption(stockCandleData)}
   />;
 }, (

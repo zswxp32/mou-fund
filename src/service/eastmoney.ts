@@ -1,9 +1,11 @@
 import axios, { AxiosInstance } from 'axios';
+import { FundList } from '../model/fund';
 
 const FundApi = {
   FundList: '/FundMNewApi/FundMNFInfo',
   FundStock: '/FundMNewApi/FundMNInverstPosition',
   FundGzDetail: '/FundMApi/FundVarietieValuationDetail.ashx',
+  FundJz: '/FundMApi/FundNetDiagram.ashx'
 };
 
 const SearchApi = {
@@ -71,9 +73,8 @@ export default class EastMoneyService {
     return list;
   }
 
-  static async getFundList(fundIds: string[]) {
+  static async getFundList(fundIds: string[]): Promise<FundList> {
     const Fcodes = fundIds.toString();
-    if (!Fcodes) alert('查询基金为空');
     const res = await this.instance.fundAxios.get(FundApi.FundList, {
       params: {
         pageIndex: 1,
@@ -82,7 +83,10 @@ export default class EastMoneyService {
         Fcodes,
       },
     });
-    return res.status === 200 ? res.data.Datas : null;
+    return new FundList(
+      res.status === 200 ? res.data.Expansion.GZTIME.substr(5) : '',
+      res.status === 200 ? res.data.Datas : [],
+    );
   }
 
   static async getFundStocks(fundId: string) {
@@ -111,6 +115,16 @@ export default class EastMoneyService {
     } : null;
   }
 
+  static async getFundJz(fundId: string) {
+    const res = await this.instance.fundAxios.get(FundApi.FundJz, {
+      params: {
+        FCODE: fundId,
+        RANGE: 'y',
+      }
+    });
+    return res.status === 200 ? res.data.Datas : null;
+  }
+
   static async getStockList(stocks) {
     const fields = 'f1,f2,f3,f4,f12,f13,f14,f292';
     const fltt = 2;
@@ -127,7 +141,7 @@ export default class EastMoneyService {
 
   static async getStockTrends(prefix, stockId) {
     const fields1 = 'f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f11,f12,f13';
-    const fields2 = 'f51,f53,f56,f58';    
+    const fields2 = 'f51,f53,f56,f58';
     const secid = `${prefix}.${stockId}`;
     const res = await this.instance.stockAxios.get(StockApi.StockTrends, {
       params: {

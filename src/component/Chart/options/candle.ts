@@ -24,7 +24,7 @@ const candleEchartOption = (data) => {
     tradList.push(trad);
   });
 
-  const toChange = (value: number) => {
+  const toChange = (value: number): number => {
     return 100 * (value - data.prePrice) / data.prePrice;
   };
 
@@ -37,7 +37,7 @@ const candleEchartOption = (data) => {
       left: 0,
       right: 0,
       bottom: 4,
-      width: 260,
+      width: 240,
       height: 24,
       containLabel: true
     },
