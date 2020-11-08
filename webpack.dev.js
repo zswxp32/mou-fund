@@ -1,11 +1,15 @@
+const path = require('path');
 const webpack = require('webpack');
 const merge = require("webpack-merge");
 const common = require("./webpack.common");
 
 const devServerOptions = {
+  contentBase: path.join(__dirname, 'dist'),
   compress: true,
+  hot: true,
   host: 'localhost',
   port: 3000,
+  disableHostCheck: true,
   proxy: {
     '/fund': {
       target: 'http://fundmobapi.eastmoney.com',
@@ -33,9 +37,9 @@ const devServerOptions = {
 
 module.exports = merge(common, {
   mode: "development",
-  devtool: "eval-cheap-module-source-map",
+  devtool: "cheap-module-source-map",
   devServer: devServerOptions,
-  plugins: [
-    new webpack.HotModuleReplacementPlugin(),
-  ]
+  // plugins: [
+  //   new webpack.HotModuleReplacementPlugin(),
+  // ]
 });

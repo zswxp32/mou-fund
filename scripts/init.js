@@ -1,9 +1,12 @@
-const fs = require('fs');
+const fs = require('fs-extra');
 const pkgStore = require('pkg-store');
 
-module.exports = function buildManifest () {
-  const cwd = process.cwd();
-  const pkg = new pkgStore(cwd);
+module.exports = function init () {
+  fs.ensureDirSync('./dist');
+  fs.emptyDirSync('./dist');
+  fs.copySync('./icon', './dist/icon');
+
+  const pkg = new pkgStore(process.cwd());
   let { name_ch: name, version } = pkg.read();
 
   if (process.env.NODE_ENV === 'development') {

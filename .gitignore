@@ -1,8 +1,5 @@
 .DS_Store
 .vscode/
 build/
-dist/js
-dist/image
-dist/*.html
-dist/manifest.json
+dist/
 node_modules

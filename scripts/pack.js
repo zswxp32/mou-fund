@@ -1,4 +1,3 @@
-const fs = require('fs');
 const { exec } = require('shelljs');
 const pkgStore = require('pkg-store');
 

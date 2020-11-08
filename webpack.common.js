@@ -2,12 +2,11 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const pkgStore = require('pkg-store');
-const buildManifest = require('./scripts/buildManifest');
 
-const cwd = process.cwd();
-const pkgData = new pkgStore(cwd).read();
+const init = require('./scripts/init');
+init();
 
-buildManifest();
+const pkgData = new pkgStore(process.cwd()).read();
 
 function getName() {
   return process.env.NODE_ENV !== 'development' ?
@@ -88,6 +87,12 @@ module.exports = {
       filename: 'option.html',
       title: '大牛基金助手-选项',
       chunks: ['option'],
+    }),
+    new HtmlWebpackPlugin({
+      template: './template/index.html',
+      filename: 'background.html',
+      title: '大牛基金助手-后台',
+      chunks: ['background'],
     }),
   ],
 };

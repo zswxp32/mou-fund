@@ -17,6 +17,8 @@ const StockApi = {
   StockTrends: '/api/qt/stock/trends2/get',
 };
 
+console.log(333);
+
 export default class EastMoneyService {
   fundAxios: AxiosInstance;
   searchAxis: AxiosInstance;
@@ -30,16 +32,16 @@ export default class EastMoneyService {
       Version: '2.0.0',
     };
     this.fundAxios = axios.create({
-      baseURL: process.env.NODE_ENV !== 'development' ? 'https://fundmobapi.eastmoney.com' : '/fund',
+      baseURL: DEV ? 'http://localhost:3000/fund' : 'https://fundmobapi.eastmoney.com',
       timeout: 30 * 1000,
       params: commonParams,
     });
     this.searchAxis = axios.create({
-      baseURL: process.env.NODE_ENV !== 'development' ? 'https://fundsuggest.eastmoney.com' : '/search',
+      baseURL: DEV ? 'http://localhost:3000/search' : 'https://fundsuggest.eastmoney.com',
       timeout: 30 * 1000,
     });
     this.stockAxios = axios.create({
-      baseURL: process.env.NODE_ENV !== 'development' ? 'https://push2.eastmoney.com' : '/stock',
+      baseURL: DEV ? 'http://localhost:3000/stock' : 'https://push2.eastmoney.com',
       timeout: 30 * 1000,
       params: commonParams,
     });
