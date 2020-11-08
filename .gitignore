@@ -2,6 +2,7 @@
 .vscode/
 build/
 dist/js
+dist/image
 dist/*.html
 dist/manifest.json
 node_modules

@@ -7,8 +7,9 @@
   border-top: 1px solid #eee;
   background: #f1f1f1;
   
-  span {
+  &>div {
     display: inline-block;
+    position: relative;
     height: 22px;
     line-height: 22px;
     margin: 0 6px;
@@ -20,6 +21,25 @@
 
     &.feedback{
       cursor: pointer;
+
+      .qr_pop {
+        position: absolute;
+        bottom: 0;
+        left: 100%;
+        width: 140px;
+        border: 1px solid #ccc;
+        img {
+          display: block;
+          width: 140px;
+          height: 140px;
+        }
+        p {
+          height: 20px;
+          text-align: center;
+          line-height: 20px;
+          color: #666;
+        }
+      }
     }
   }
 }

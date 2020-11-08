@@ -10,15 +10,15 @@ const pkgData = new pkgStore(cwd).read();
 buildManifest();
 
 function getName() {
-  return process.env.NODE_ENV !== 'development'
-    ? JSON.stringify(pkgData.name_ch)
-    : JSON.stringify(`${pkgData.name_ch}-debug`);
+  return process.env.NODE_ENV !== 'development' ?
+    JSON.stringify(pkgData.name_ch) :
+    JSON.stringify(`${pkgData.name_ch}-debug`);
 }
 
 function getVersion() {
-  return process.env.NODE_ENV !== 'development'
-    ? JSON.stringify(pkgData.version)
-    : JSON.stringify('1.0.0');
+  return process.env.NODE_ENV !== 'development' ?
+    JSON.stringify(pkgData.version) :
+    JSON.stringify('1.0.0');
 }
 
 module.exports = {
@@ -36,6 +36,16 @@ module.exports = {
         exclude: /node_modules/,
         test: /\.[tj]sx?$/,
         use: 'ts-loader'
+      },
+      {
+        test: /\.(png|jpg|gif)$/,
+        use: [{
+          loader: 'url-loader',
+          options: {
+            limit: 8192,
+            outputPath: './image'
+          }
+        }]
       },
       {
         exclude: /node_modules/,
