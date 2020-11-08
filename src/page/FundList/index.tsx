@@ -234,12 +234,12 @@ export default function PageFundList(): ReactElement {
                             {toPercentString(gzzzl, true)}
                           </p>
                         </div>}
-                        { !editing && (!updated
-                          ? <div className={`bold ${toNumberColor((gz - jz) * hold)}`}>
-                            {((gz - jz) * hold).toFixed(2)}
-                          </div>
-                          : <div className={`bold ${toNumberColor((jz - jz / (1 + jzzzl / 100)) * hold)}`}>
+                        { !editing && (updated
+                          ? <div className={`bold ${toNumberColor((jz - jz / (1 + jzzzl / 100)) * hold)}`}>
                             {((jz - jz / (1 + jzzzl / 100)) * hold).toFixed(2)}
+                          </div>
+                          : <div className={`bold ${toNumberColor((gz - jz) * hold)}`}>
+                            {((gz - jz) * hold).toFixed(2)}
                           </div>)}
 
                         { editing && <div>
@@ -261,9 +261,9 @@ export default function PageFundList(): ReactElement {
                         { editing && <div>
                           <span className={styles.delete_button} onClick={() => onDelete(code)}>🗑️</span>
                         </div>}
-                        { !editing && updated
+                        { !editing && (updated
                           ? <span className={styles.updated}>净值已更新</span>
-                          : <span className={styles.un_updated}>净值未更新</span>}
+                          : <span className={styles.un_updated}>净值未更新</span>)}
                       </div>
                     )}
                   </Draggable>;
