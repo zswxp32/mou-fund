@@ -138,12 +138,9 @@ export default function PageFundList(): ReactElement {
           placeholder="请输入想添加的基金代码"
           onChange={onSearchChange}
         />
-        <span className={styles.search_cancle} onClick={onSearchCancle}>×</span>
+        {searchStr !== '' && <span className={styles.search_cancle} onClick={onSearchCancle}>×</span>}
       </div>
-      {searchBoxShow
-        ? <SearchResult list={searchList} onItemClick={onSearchItemClick} />
-        : null
-      }
+      {searchBoxShow && <SearchResult list={searchList} onItemClick={onSearchItemClick} />}
       {fundList.items.length > 0
         ? <div className={styles.buttons}>
           <span className="button" onClick={() => onEditClick(!editing)}>
@@ -173,7 +170,10 @@ export default function PageFundList(): ReactElement {
             <p>估值</p>
             {fundList.gzrq && <p className={styles.gz_data}>{fundList.gzrq}</p>}
           </div>}
-          {!editing && <div>收益</div>}
+          {!editing && <div>
+            <p>预估收益</p>
+            {fundList.gzrq && <p className={styles.gz_data}>{fundList.gzrq}</p>}
+          </div>}
 
           {editing ? <div>持有份额</div> : null}
           {editing ? <div>持有单价</div> : null}
@@ -192,7 +192,7 @@ export default function PageFundList(): ReactElement {
               >
                 { fundList.items.map((item, index) => {
                   const { hold, cost } = fundHolds[item.code];
-                  const { code, name, jz, jzzzl, gz, gzzzl, updated } = item;
+                  const { code, name, jz, jzzzl, gz, gzzzl, gzing, updated } = item;
                   return <Draggable key={code} draggableId={code} index={index}>
                     {(provided) => (
                       <div
@@ -261,7 +261,7 @@ export default function PageFundList(): ReactElement {
                         { editing && <div>
                           <span className={styles.delete_button} onClick={() => onDelete(code)}>🗑️</span>
                         </div>}
-                        { !editing && (updated
+                        { !editing && !gzing && (updated
                           ? <span className={styles.updated}>净值已更新</span>
                           : <span className={styles.un_updated}>净值未更新</span>)}
                       </div>
@@ -279,6 +279,36 @@ export default function PageFundList(): ReactElement {
           </div>
         </div>
       }
+
+      <div className={styles.list_footer}>
+        <div className={styles.list_line}>
+          <div className="tl">汇总</div>
+
+          {!editing && <div className={styles.chart}></div>}
+
+          <div>
+            {fundList.totalMoney.toFixed(2)}
+          </div>
+          <div>
+            <p className={`bold ${toNumberColor(fundList.totalGained)}`}>
+              {fundList.totalGained.toFixed(2)}
+            </p>
+            <p className={`bold ${toNumberColor(fundList.totalGained)}`}>
+              {fundList.totalPercent}
+            </p>
+          </div>
+
+          {!editing && <div></div>}
+          {!editing && <div></div>}
+          {!editing && <div>
+            <p className={`bold ${toNumberColor(fundList.totalGainedExpected)}`}>{fundList.totalGainedExpected.toFixed(2)}</p>
+          </div>}
+
+          {editing ? <div></div> : null}
+          {editing ? <div></div> : null}
+          {editing ? <div></div> : null}
+        </div>
+      </div>
     </div>
 
     <Version product={PRODUCT} version={VERSION} />

@@ -6,7 +6,7 @@ export type FundHold = {
   cost?: number;
 };
 
-type FundHoldMap = {
+export type FundHoldMap = {
   [key: string]: FundHold,
 };
 

@@ -35,14 +35,16 @@ const miniEchartOption = (fundGzDetail) => {
     },
     tooltip: {
       trigger: 'axis',
-      position: (point) => [point[0] + 30, point[1] - 20],
-      backgroundColor: '#ffeee5',
+      position: (point) => [point[0] + 20, 0],
+      backgroundColor: '#fff',
       borderColor: '#ffddcc',
       borderWidth: 1,
+      padding: [3, 5, 3, 5],
       textStyle: {
         color: '#333',
         fontSize: 8,
         lineHeight: 14,
+        align: 'left',
       },
       formatter: ([s]) => {
         return `
@@ -59,10 +61,7 @@ const miniEchartOption = (fundGzDetail) => {
         show: false,
       },
       axisLine: {
-        lineStyle: {
-          color: 'grey',
-          width: 1,
-        }
+        show: false,
       },
       axisTick: {
         show: false,
@@ -71,7 +70,7 @@ const miniEchartOption = (fundGzDetail) => {
     },
     yAxis: {
       type: "value",
-      interval: 5,
+      interval: 10,
       axisLabel: {
         showMinLabel: true,
         showMaxLabel: true,

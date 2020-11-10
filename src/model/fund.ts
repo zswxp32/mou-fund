@@ -1,3 +1,6 @@
+import StorageService, { FundHold, FundHoldMap } from "../service/storage";
+import { toPercentString } from "../util/number";
+
 type StringMap = { [key: string]: string };
 
 export class Fund {
@@ -12,6 +15,7 @@ export class Fund {
   gzzzl: number; // 估值增长率：GSZZL
   gzrq: string; // 估值日期：GZTIME
 
+  gzing: boolean;
   updated: boolean;
 
   constructor(data: StringMap) {
@@ -25,8 +29,17 @@ export class Fund {
     this.gz = parseFloat(data.GSZ);
     this.gzzzl = parseFloat(data.GSZZL);
     this.gzrq = data.GZTIME.substr(5, 5);
+    this.gzing = data.GZTIME.substr(11, 5) < '15:00';
 
     this.updated = this.jzrq === this.gzrq;
+  }
+
+  public get holdInfo(): FundHold {
+    return StorageService.getFundHolds()[this.code];
+  }
+
+  public get expectedGained(): number {
+    return (this.gz - this.jz) * this.holdInfo.hold;
   }
 }
 
@@ -58,5 +71,31 @@ export class FundList {
   setItems(items: Fund[]): FundList {
     this.items = items;
     return this;
+  }
+
+  public get totalMoney(): number {
+    let total = 0;
+    this.items.forEach(item => {
+      total += item.jz * item.holdInfo.hold;
+    });
+    return total;
+  }
+
+  public get totalGained(): number {
+    let total = 0;
+    this.items.forEach(item => {
+      total += (item.jz - item.holdInfo.cost) * item.holdInfo.hold;
+    });
+    return total;
+  }
+
+  public get totalPercent(): string {
+    return toPercentString(this.totalGained / (this.totalMoney - this.totalGained) * 100, true);
+  }
+
+  public get totalGainedExpected(): number {
+    let total = 0;
+    this.items.forEach(item => total += item.expectedGained);
+    return total;
   }
 }

@@ -14,12 +14,12 @@ for (let i = 0; i < 242; i++) {
 }
 
 const candleEchartOption = (data) => {
-  const timeList = [];
+  const timeList = new Array(241);
   const priceList = [];
   const tradList = [];
-  data.trends.forEach(str => {
+  data.trends.forEach((str, index) => {
     const [time, price, trad] = str.split(',');
-    timeList.push(time);
+    timeList[index] = time;
     priceList.push(price);
     tradList.push(trad);
   });
@@ -43,10 +43,11 @@ const candleEchartOption = (data) => {
     },
     tooltip: {
       trigger: 'axis',
-      position: (point) => [point[0] + 30, point[1] - 20],
-      backgroundColor: '#ffeee5',
+      position: (point) => [point[0] + 20, 0],
+      backgroundColor: '#fff',
       borderColor: '#ffddcc',
       borderWidth: 1,
+      padding: [3, 5, 3, 5],
       textStyle: {
         color: '#333',
         fontSize: 8,

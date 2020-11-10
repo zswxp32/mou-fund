@@ -30,13 +30,13 @@
   .search_cancle {
     position: absolute;
     right: 7px;
-    top: 8px;
-    width: 16px;
-    height: 16px;
+    top: 7px;
+    width: 17px;
+    height: 17px;
     line-height: 14px;
     text-align: center;
     background: #bbb;
-    border-radius: 8px;
+    border-radius: 9px;
     font-size: 16px;
     font-weight: bold;
     color: #fff;
@@ -105,7 +105,9 @@
 
 .list_body {
   margin-top: 40px;
-  min-height: 300px;
+  max-height: 300px;
+  overflow-y: auto;
+  overflow-x: hidden;
 
   .list_line {
     position: relative;
@@ -159,6 +161,20 @@
   }
 }
 
+.list_footer {
+  // todo
+  height: 40px;
+  background: #ff9966;
+
+  .list_line {
+    height: 100%;
+    &>div{
+      font-weight: bold;
+      color: #fff;
+    }
+  }
+}
+
 .list_line>div {
   display: flex;
   min-width: 60px;
@@ -167,6 +183,7 @@
   justify-content: center;
   text-align: center;
   white-space: nowrap;
+  padding-right: 6px;
 
   &:nth-child(1) {
     text-align: left;

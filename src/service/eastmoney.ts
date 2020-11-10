@@ -17,8 +17,6 @@ const StockApi = {
   StockTrends: '/api/qt/stock/trends2/get',
 };
 
-console.log(333);
-
 export default class EastMoneyService {
   fundAxios: AxiosInstance;
   searchAxis: AxiosInstance;
