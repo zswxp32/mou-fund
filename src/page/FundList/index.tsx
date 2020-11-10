@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 import { useLatest } from '../../util/hooks';
-import { toPercentString, toPercentColor, toGainPercentString, toNumberColor } from '../../util/number';
+import { toPercentString, toPercentColor, toNumberColor } from '../../util/number';
 import { Fund, FundList } from '../../model/fund';
 import { PageLoading } from '../../component/Loading';
 import { ChartMini } from '../../component/Chart';
@@ -192,7 +192,7 @@ export default function PageFundList(): ReactElement {
               >
                 { fundList.items.map((item, index) => {
                   const { hold, cost } = fundHolds[item.code];
-                  const { code, name, jz, jzzzl, gz, gzzzl, gzing, updated } = item;
+                  const { code, name, jz, jzzzl, gz, gzzzl, gzing, updated, money, gained, gainedPercent, gainedExpected } = item;
                   return <Draggable key={code} draggableId={code} index={index}>
                     {(provided) => (
                       <div
@@ -212,19 +212,19 @@ export default function PageFundList(): ReactElement {
                           <ChartMini fundId={code} fundGzDetail={fundGzDetails[code]} />
                         </div>}
 
-                        <div>{(jz * hold).toFixed(2)}</div>
+                        <div>{money.toFixed(2)}</div>
                         <div>
-                          {(cost != 0 && hold != 0) && <p className={`bold ${toNumberColor((jz - cost) * hold)}`}>
-                            {((jz - cost) * hold).toFixed(2)}
+                          {gained && <p className={`bold ${toNumberColor(gained)}`}>
+                            {gained.toFixed(2)}
                           </p>}
-                          <p className={`bold ${toPercentColor(toGainPercentString(jz, cost))}`}>
-                            {toGainPercentString(jz, cost, true) || '未配置'}
+                          <p className={`bold ${toNumberColor(gainedPercent)}`}>
+                            {gainedPercent ? toPercentString(gainedPercent, true) : '未配置'}
                           </p>
                         </div>
 
                         { !editing && <div>
                           <p>{jz}</p>
-                          <p className={`bold ${toPercentColor(jzzzl)}`}>
+                          <p className={`bold ${toNumberColor(jzzzl)}`}>
                             {toPercentString(jzzzl, true)}
                           </p>
                         </div>}
@@ -234,13 +234,9 @@ export default function PageFundList(): ReactElement {
                             {toPercentString(gzzzl, true)}
                           </p>
                         </div>}
-                        { !editing && (updated
-                          ? <div className={`bold ${toNumberColor((jz - jz / (1 + jzzzl / 100)) * hold)}`}>
-                            {((jz - jz / (1 + jzzzl / 100)) * hold).toFixed(2)}
-                          </div>
-                          : <div className={`bold ${toNumberColor((gz - jz) * hold)}`}>
-                            {((gz - jz) * hold).toFixed(2)}
-                          </div>)}
+                        { !editing && <div className={`bold ${toNumberColor(gainedExpected)}`}>
+                          {gainedExpected.toFixed(2)}
+                        </div>}
 
                         { editing && <div>
                           <input
@@ -282,7 +278,7 @@ export default function PageFundList(): ReactElement {
 
       <div className={styles.list_footer}>
         <div className={styles.list_line}>
-          <div className="tl">汇总</div>
+          <div className="tl">总持仓</div>
 
           {!editing && <div className={styles.chart}></div>}
 
@@ -301,7 +297,9 @@ export default function PageFundList(): ReactElement {
           {!editing && <div></div>}
           {!editing && <div></div>}
           {!editing && <div>
-            <p className={`bold ${toNumberColor(fundList.totalGainedExpected)}`}>{fundList.totalGainedExpected.toFixed(2)}</p>
+            <p className={`bold ${toNumberColor(fundList.totalGainedExpected)}`}>
+              {fundList.totalGainedExpected.toFixed(2)}
+            </p>
           </div>}
 
           {editing ? <div></div> : null}

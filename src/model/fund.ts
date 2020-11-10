@@ -38,7 +38,24 @@ export class Fund {
     return StorageService.getFundHolds()[this.code];
   }
 
-  public get expectedGained(): number {
+  public get money(): number {
+    return this.jz * this.holdInfo.hold;
+  }
+
+  public get gained(): number {
+    if (this.holdInfo.cost === 0 || this.holdInfo.hold === 0) return null;
+    return (this.jz - this.holdInfo.cost) * this.holdInfo.hold;
+  }
+
+  public get gainedPercent(): number {
+    if (this.holdInfo.cost === 0) return null;
+    return (this.jz - this.holdInfo.cost) / this.holdInfo.cost * 100;
+  }
+
+  public get gainedExpected(): number {
+    if (this.updated) {
+      return (this.jz - this.jz / (1 + this.jzzzl / 100)) * this.holdInfo.hold;
+    }
     return (this.gz - this.jz) * this.holdInfo.hold;
   }
 }
@@ -75,17 +92,13 @@ export class FundList {
 
   public get totalMoney(): number {
     let total = 0;
-    this.items.forEach(item => {
-      total += item.jz * item.holdInfo.hold;
-    });
+    this.items.forEach(item => total += item.money);
     return total;
   }
 
   public get totalGained(): number {
     let total = 0;
-    this.items.forEach(item => {
-      total += (item.jz - item.holdInfo.cost) * item.holdInfo.hold;
-    });
+    this.items.forEach(item => total += item.gained);
     return total;
   }
 
@@ -95,7 +108,7 @@ export class FundList {
 
   public get totalGainedExpected(): number {
     let total = 0;
-    this.items.forEach(item => total += item.expectedGained);
+    this.items.forEach(item => total += item.gainedExpected);
     return total;
   }
 }
