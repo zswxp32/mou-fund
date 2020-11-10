@@ -103,6 +103,7 @@ export class FundList {
   }
 
   public get totalPercent(): string {
+    if (this.totalMoney == 0) return '0.00%';
     return toPercentString(this.totalGained / (this.totalMoney - this.totalGained) * 100, true);
   }
 

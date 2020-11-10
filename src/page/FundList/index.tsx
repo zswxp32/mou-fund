@@ -276,7 +276,7 @@ export default function PageFundList(): ReactElement {
         </div>
       }
 
-      <div className={styles.list_footer}>
+      {fundList.items.length > 0 && <div className={styles.list_footer}>
         <div className={styles.list_line}>
           <div className="tl">总持仓</div>
 
@@ -306,7 +306,7 @@ export default function PageFundList(): ReactElement {
           {editing ? <div></div> : null}
           {editing ? <div></div> : null}
         </div>
-      </div>
+      </div>}
     </div>
 
     <Version product={PRODUCT} version={VERSION} />
