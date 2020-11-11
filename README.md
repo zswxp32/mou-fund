@@ -9,5 +9,12 @@
 - 通过基金代码或名称搜索并添加基金
 - 在编辑中输入持有份额和持仓成本
 
+## 界面预览
+- 基金列表
+![image](https://github.com/zswxp32/mou-fund/blob/master/pic/list.jpg)
+
+- 基金重仓股票列表
+![image](https://github.com/zswxp32/mou-fund/blob/master/pic/stocks.jpg)
+
 ## 主要功能
 很多并持续更新中，请保持关注
