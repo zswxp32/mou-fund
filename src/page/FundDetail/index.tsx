@@ -71,8 +71,10 @@ export default function PageFundDetail(): ReactElement {
 
   return (
     <div className="container">
-      <Back />
-      <div className={styles.title}>重仓股票明细</div>
+      <div className={styles.title}>
+        <Back />
+        <span>重仓股票明细</span>
+      </div>
 
       <div className={styles.list}>
         <div className={styles.list_header}>
@@ -87,31 +89,29 @@ export default function PageFundDetail(): ReactElement {
         <div className={styles.list_body}>
           {stockInfos.list.map((item, index) => (
             <div key={item.code} className={`${styles.list_line} ${index % 2 === 0 ? styles.even : styles.odd}`}>
-              <div>
-                <p className="bold">{item.name} ({item.code})</p>
+              <div className="fs12">
+                {item.name} ({item.code})
               </div>
               <div className={styles.chart} style={{ fontSize: 0 }}>
                 <ChartCandle stockId={item.code} stockCandleData={stockTrends[item.code]} />
               </div>
-              <div>
-                <p>{item.price}</p>
+              <div className="fs14">{item.price}</div>
+              <div className={`bold fs14 ${toPercentColor(item.change)}`}>
+                {toPercentString(item.change, true)}
               </div>
-              <div>
-                <p className={`bold ${toPercentColor(item.change)}`}>{toPercentString(item.change, true)}</p>
-              </div>
-              <div>
-                <p>{item.proportion}%</p>
+              <div className="bold fs14">
+                {item.proportion}%
               </div>
             </div>))}
         </div>
         <div className={styles.list_footer}>
           <p>
             <span>重仓股票仓位：</span>
-            <span>{stockInfos.stockProportionTotal}%</span>
+            <span className="bold fs14">{stockInfos.stockProportionTotal}%</span>
           </p>
           <p>
             <span>重仓股票涨跌：</span>
-            <span className={`${toPercentColor(stockInfos.stockIncomeEstimated)}`}>
+            <span className={`bold fs14 ${toPercentColor(stockInfos.stockIncomeEstimated)}`}>
               {toPercentString(stockInfos.stockIncomeEstimated, true)}
             </span>
           </p>

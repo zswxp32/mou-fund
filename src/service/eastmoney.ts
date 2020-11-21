@@ -126,7 +126,7 @@ export default class EastMoneyService {
   }
 
   static async getStockList(stocks) {
-    const fields = 'f1,f2,f3,f4,f12,f13,f14,f292';
+    const fields = 'f1,f2,f3,f4,f12,f13,f14';
     const fltt = 2;
     const secids = stocks.map((item) => `${item.NEWTEXCH}.${item.GPDM}`).toString();
     const res = await this.instance.stockAxios.get(StockApi.StockList, {

@@ -21,7 +21,6 @@
 		"128": "icon/6.png"
 	},
 	"permissions": [
-		"http://localhost:3000/*",
     "https://*.eastmoney.com/*"
 	]
 }

@@ -1,18 +1,9 @@
 import { v4 as uuid } from 'uuid';
-
-export type FundHold = {
-  code: string;
-  hold?: number;
-  cost?: number;
-};
-
-export type FundHoldMap = {
-  [key: string]: FundHold,
-};
+import { FundHold, FundHoldMap } from '../model/fund';
 
 const INIT_FUND_IDS: string[] = ['161725', '005598', '320007', '161726', '161028'];
 const INIT_FUND_MAP: FundHoldMap = {};
-INIT_FUND_IDS.forEach(id => INIT_FUND_MAP[id] = { code: id, hold: 0, cost: 0,});
+INIT_FUND_IDS.forEach(id => INIT_FUND_MAP[id] = { code: id, count: 0, cost: 0, });
 
 export default class StorageService {
   static firstBite(): void {
@@ -40,7 +31,7 @@ export default class StorageService {
     return fundIdsStr.split(',');
   }
 
-  static addFundById(fundId: string) : string[] {
+  static addFundById(fundId: string): string[] {
     const fundIds = this.getFundIds();
     if (fundIds.includes(fundId)) {
       alert('这只基金你之前已经添加过了哦 ~');
@@ -69,7 +60,8 @@ export default class StorageService {
   static getFundHolds(): FundHoldMap {
     const fundHoldsStr = localStorage.getItem('mou-fund-holds');
     if (!fundHoldsStr) return {};
-    return JSON.parse(fundHoldsStr);
+    // replace for my bad
+    return JSON.parse(fundHoldsStr.replaceAll('hold', 'count'));
   }
 
   static addFundHold(hold: FundHold): FundHoldMap {

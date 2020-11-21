@@ -1,9 +1,19 @@
-import StorageService, { FundHold, FundHoldMap } from "../service/storage";
+import StorageService from "../service/storage";
 import { toPercentString } from "../util/number";
 
 type StringMap = { [key: string]: string };
 
-export class Fund {
+export type FundHold = {
+  code: string;
+  cost?: number;
+  count?: number;
+};
+
+export type FundHoldMap = {
+  [key: string]: FundHold,
+};
+
+export class FundDetail {
   code: string; // 基金代码：FCODE
   name: string; // 基金名：SHORTNAME
 
@@ -14,9 +24,9 @@ export class Fund {
   gz: number; // 估值：GSZ
   gzzzl: number; // 估值增长率：GSZZL
   gzrq: string; // 估值日期：GZTIME
+  gzing: boolean; // 估值更新中（09:30 - 14:59）
 
-  gzing: boolean;
-  updated: boolean;
+  updated: boolean; //估值已更新，判断方式：jzrq == gzrq
 
   constructor(data: StringMap) {
     this.code = data.FCODE;
@@ -34,41 +44,41 @@ export class Fund {
     this.updated = this.jzrq === this.gzrq;
   }
 
-  public get holdInfo(): FundHold {
+  public get hold(): FundHold {
     return StorageService.getFundHolds()[this.code];
   }
 
   public get money(): number {
-    return this.jz * this.holdInfo.hold;
+    return this.jz * this.hold.count;
   }
 
   public get gained(): number {
-    if (this.holdInfo.cost === 0 || this.holdInfo.hold === 0) return null;
-    return (this.jz - this.holdInfo.cost) * this.holdInfo.hold;
+    if (this.hold.cost === 0 || this.hold.count === 0) return null;
+    return (this.jz - this.hold.cost) * this.hold.count;
   }
 
   public get gainedPercent(): number {
-    if (this.holdInfo.cost === 0) return null;
-    return (this.jz - this.holdInfo.cost) / this.holdInfo.cost * 100;
+    if (this.hold.cost === 0) return null;
+    return (this.jz - this.hold.cost) / this.hold.cost * 100;
   }
 
   public get gainedExpected(): number {
     if (this.updated) {
-      return (this.jz - this.jz / (1 + this.jzzzl / 100)) * this.holdInfo.hold;
+      return (this.jz - this.jz / (1 + this.jzzzl / 100)) * this.hold.count;
     }
-    return (this.gz - this.jz) * this.holdInfo.hold;
+    return (this.gz - this.jz) * this.hold.count;
   }
 }
 
 export class FundList {
   gzrq: string;
   jzrq: string;
-  items: Fund[];
+  items: FundDetail[];
 
   constructor(gzrq: string, list: StringMap[]) {
     this.gzrq = gzrq;
     if (list && list.length) {
-      this.items = list.map(item => new Fund(item));
+      this.items = list.map(item => new FundDetail(item));
       this.jzrq = this.items[0].jzrq;
     } else {
       this.items = [];
@@ -85,7 +95,7 @@ export class FundList {
     }
   }
 
-  setItems(items: Fund[]): FundList {
+  setItems(items: FundDetail[]): FundList {
     this.items = items;
     return this;
   }

@@ -24,10 +24,10 @@ export function Version({ product, version }: any) {
       onMouseLeave={() => toggleQr(false)}
     >
       反馈
-      { showQr && <div className={styles.qr_pop}>
+      {/* { showQr && <div className={styles.qr_pop}>
         <img src={qrImg} />
         <p>扫一扫加入反馈群</p>
-      </div>}
+      </div>} */}
     </div>
   </div>;
 }

@@ -1,15 +1,21 @@
+@font-face {
+  font-family: abc;
+  src: url(./abc.ttf);
+}
+
 * {
   padding: 0;
   margin: 0;
+  list-style: none;
   font-size: 12px;
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: abc, sans-serif !important;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  color: #555;
+  background: #f3f3f3;
 }
 
 ::-webkit-scrollbar {
@@ -39,6 +45,10 @@ td {
 }
 
 :global {
+  .container {
+    overflow: hidden;
+  }
+
   .red {
     color: #e62e00;
   }
@@ -63,24 +73,66 @@ td {
     text-align: right;
   }
 
+  .fs12 {
+    font-size: 14px;
+  }
+
+  .fs13 {
+    font-size: 13px;
+  }
+
+  .fs14 {
+    font-size: 14px;
+  }
+
+  .fs16 {
+    font-size: 16px;
+  }
+
+  .fs18 {
+    font-size: 18px;
+  }
+
+  .fs20 {
+    font-size: 20px;
+  }
+
+  .mr2 {
+    margin-right: 5px;
+  }
+
+  .mr3 {
+    margin-right: 5px;
+  }
+
+  .mr4 {
+    margin-right: 5px;
+  }
+  
+  .mr5 {
+    margin-right: 5px;
+  }
+
   .button {
     display: inline-block;
     user-select: none;
-    margin-right: 4px;
-    min-width: 40px;
-    height: 28px;
-    padding: 0 6px;
-    line-height: 28px;
+    margin-left: 5px;
+    min-width: 32px;
+    height: 22px;
+    padding: 0 5px;
+    line-height: 22px;
     font-weight: bold;
-    border: 1px solid #cc4400;
+    border: 1px solid #fd884e;
     text-align: center;
-    color: #cc4400;
+    color: #fd884e;
     cursor: pointer;
-    
+    background: #fdfbf9;
+
     &:hover {
       color: #fff;
-      background: #cc4400;
+      background: #fd884e;
     }
+
     &:active {
       color: #fff;
       background: #cc0000;

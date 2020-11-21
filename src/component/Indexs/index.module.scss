@@ -1,0 +1,14 @@
+.stock_index {
+  display: flex;
+  justify-content: space-around;
+  height: 60px;
+}
+
+.item {
+  width: 120px;
+  height: 60px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
