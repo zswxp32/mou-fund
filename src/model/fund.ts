@@ -26,7 +26,7 @@ export class FundDetail {
   gzrq: string; // 估值日期：GZTIME
   gzing: boolean; // 估值更新中（09:30 - 14:59）
 
-  updated: boolean; //估值已更新，判断方式：jzrq == gzrq
+  updated: boolean; //估值已更新，判断方式：gzrq == null || jzrq == gzrq
 
   constructor(data: StringMap) {
     this.code = data.FCODE;
@@ -36,12 +36,12 @@ export class FundDetail {
     this.jzzzl = parseFloat(data.NAVCHGRT);
     this.jzrq = data.PDATE.substr(5);
 
-    this.gz = parseFloat(data.GSZ);
-    this.gzzzl = parseFloat(data.GSZZL);
-    this.gzrq = data.GZTIME.substr(5, 5);
-    this.gzing = data.GZTIME.substr(11, 5) < '15:00';
+    this.gz = data.GSZ !== '--' ? parseFloat(data.GSZ) : null;
+    this.gzzzl = data.GSZZL !== '--' ? parseFloat(data.GSZZL) : null;
+    this.gzrq = data.GZTIME !== '--' ? data.GZTIME.substr(5, 5) : null;
+    this.gzing = data.GZTIME !== '--' ? data.GZTIME.substr(11, 5) < '15:00' : false;
 
-    this.updated = this.jzrq === this.gzrq;
+    this.updated = this.gzrq == null || this.jzrq === this.gzrq;
   }
 
   public get hold(): FundHold {
@@ -66,7 +66,10 @@ export class FundDetail {
     if (this.updated) {
       return (this.jz - this.jz / (1 + this.jzzzl / 100)) * this.hold.count;
     }
-    return (this.gz - this.jz) * this.hold.count;
+    if (this.gz) {
+      return (this.gz - this.jz) * this.hold.count;
+    }
+    return null;
   }
 }
 

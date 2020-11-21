@@ -43,6 +43,7 @@ const miniEchartOption = (fundGzDetail) => {
       textStyle: {
         color: '#333',
         fontSize: 8,
+        fontFamily: 'abc',
         lineHeight: 14,
         align: 'left',
       },
@@ -77,6 +78,7 @@ const miniEchartOption = (fundGzDetail) => {
         formatter: (value) => toPercentString(value, true),
         color: (value) => toPercentColor(value),
         fontSize: 10,
+        fontFamily: 'abc',
       },
       min: (value) => value.min,
       max: (value) => value.max,

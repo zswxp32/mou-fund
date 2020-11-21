@@ -19,11 +19,6 @@ export const StockIndexCodeList = [
     GPDM: '000300',
     GPJC: '沪深300',
   },
-  // {
-  //   NEWTEXCH: 1,
-  //   GPDM: '000016',
-  //   GPJC: '上证50',
-  // },
   {
     NEWTEXCH: 100,
     GPDM: 'HSI',

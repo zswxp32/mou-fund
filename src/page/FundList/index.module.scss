@@ -112,7 +112,7 @@
 .list_body {
   margin-top: 40px;
   min-height: 200px;
-  max-height: 500px;
+  max-height: 300px;
   overflow-y: auto;
   overflow-x: hidden;
   background: #fff;
@@ -212,7 +212,7 @@
   }
 
   &.chart {
-    width: 260px;
+    width: 240px;
   }
 }
 

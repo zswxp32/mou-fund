@@ -5,10 +5,9 @@
 }
 
 .item {
-  width: 120px;
+  display: flex;
   height: 60px;
   text-align: center;
-  display: flex;
   flex-direction: column;
   justify-content: space-between;
 }

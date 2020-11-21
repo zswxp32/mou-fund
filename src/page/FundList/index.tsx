@@ -243,9 +243,11 @@ export default function PageFundList(): ReactElement {
                         {/** 实时估值 */}
                         { !editing && <div>
                           <p className={`bold fs16 ${toPercentColor(gzzzl)}`}>
-                            {toPercentString(gzzzl, true)}
+                            {gzzzl ? toPercentString(gzzzl, true) : '--'}
                           </p>
-                          <p className='fs14'>{gz}</p>
+                          <p className='fs14'>
+                            {gz ? gz : '--'}
+                          </p>
                         </div>}
                         {/** 预估收益 */}
                         { !editing && <div className={`bold fs18 ${toNumberColor(gainedExpected)}`}>

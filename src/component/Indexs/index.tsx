@@ -27,7 +27,7 @@ export function StockIndexs({ dataList }: StockIndexsProps): ReactElement {
       <p>
         <span className={`bold fs13 mr5 ${toNumberColor(item.f4)}`}>
           {toNumberPN(item.f4)}</span>
-        <span className={`bold fs14 ${toNumberColor(item.f4)}`}>
+        <span className={`bold fs13 ${toNumberColor(item.f4)}`}>
           {toPercentString(item.f3, true)}
         </span>
       </p>
