@@ -1,3 +1,5 @@
+@import './base.scss';
+
 @font-face {
   font-family: abc;
   src: url(./abc.ttf);
@@ -14,8 +16,9 @@ body {
   font-family: abc, sans-serif !important;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: #555;
-  background: #f3f3f3;
+  color: #333;
+  background: #222;
+  padding: 5px;
 }
 
 ::-webkit-scrollbar {
@@ -54,7 +57,7 @@ td {
   }
 
   .green {
-    color: #009900;
+    color: #00bb00;
   }
 
   .grey {
@@ -74,7 +77,7 @@ td {
   }
 
   .fs12 {
-    font-size: 14px;
+    font-size: 12px;
   }
 
   .fs13 {
@@ -118,26 +121,24 @@ td {
     user-select: none;
     margin-left: 5px;
     min-width: 32px;
-    height: 22px;
+    height: 25px;
     padding: 0 5px;
-    line-height: 22px;
+    line-height: 26px;
     font-weight: bold;
-    border: 1px solid #fd884e;
+    background: $blue7;
     text-align: center;
-    color: #fd884e;
+    color: #fff;
     cursor: pointer;
-    background: #fdfbf9;
 
     &:hover {
       color: #fff;
-      background: #fd884e;
+      background: $blue6;
     }
 
     &:active {
       color: #fff;
-      background: #cc0000;
+      background: $blue8;
       position: relative;
-      top: 1px;
     }
   }
 }

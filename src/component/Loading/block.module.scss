@@ -1,3 +1,5 @@
+@import '../../style/base.scss';
+
 @keyframes spin {
   from {
     transform: rotate(0deg);
@@ -23,13 +25,13 @@
   width: 3px;
   height: 3px;
   border-radius: 100%;
-  box-shadow: 0 -10px 0 1px orange,
-    10px 0px orange,
-    0 10px orange,
-    -10px 0 orange,
-    -7px -7px 0 .5px orange,
-    7px -7px 0 1.5px orange,
-    7px 7px orange,
-    -7px 7px orange;
+  box-shadow: 0 -10px 0 1px $blue5,
+    10px 0px $blue5,
+    0 10px $blue5,
+    -10px 0 $blue5,
+    -7px -7px 0 .5px $blue5,
+    7px -7px 0 1.5px $blue5,
+    7px 7px $blue5,
+    -7px 7px $blue5;
   animation: spin 1s steps(8) infinite;
 }

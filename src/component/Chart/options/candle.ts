@@ -44,14 +44,15 @@ const candleEchartOption = (data) => {
     tooltip: {
       trigger: 'axis',
       position: (point) => [point[0] + 20, 0],
-      backgroundColor: '#fff',
-      borderColor: '#ffddcc',
+      backgroundColor: '#e6f7ff', // $blue1
+      borderColor: '#69c0ff', // $blue4
       borderWidth: 1,
       padding: [3, 5, 3, 5],
       textStyle: {
         color: '#333',
         fontSize: 8,
-        lineHeight: 14,
+        fontFamily: 'abc',
+        lineHeight: 13,
         align: 'left',
       },
       formatter: ([s]) => {
@@ -87,6 +88,7 @@ const candleEchartOption = (data) => {
         formatter: (value) => toPercentString(toChange(value), true),
         color: (value) => toPercentColor(toChange(value)),
         fontSize: 10,
+        fontFamily: 'abc',
       },
       min: (value) => Math.min(value.min, data.prePrice),
       max: (value) => Math.max(value.max, data.prePrice),
@@ -107,12 +109,11 @@ const candleEchartOption = (data) => {
       {
         type: 'line',
         areaStyle: {
-          color: '#ffddcc',
-          opacity: 0.5,
+          color: '#bae7ff', // $blue2
         },
         lineStyle: {
           width: 2,
-          color: '#ff9966',
+          color: '#69c0ff', // $blue4
         },
         data: priceList,
         markLine: {

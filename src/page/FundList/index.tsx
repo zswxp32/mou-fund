@@ -212,7 +212,7 @@ export default function PageFundList(): ReactElement {
                         {/** 基金 */}
                         <div>
                           <p className="bold">
-                            <Link className={styles.fund_link} to={`/fund/detail/${code}`}>{name}</Link>
+                            <Link className={styles.fund_link} title={name} to={`/fund/detail/${code}`}>{name}</Link>
                           </p>
                           <p className="fs14">{code}</p>
                         </div>

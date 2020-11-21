@@ -1,3 +1,5 @@
+@import '../../style/base.scss';
+
 .version {
   display: flex;
   align-items: center;
@@ -12,7 +14,7 @@
     line-height: 22px;
     margin: 0 5px;
     padding: 0 5px;
-    background: #fd884e;
+    background: $blue7;
     text-align: center;
     color: #fff;
     border-radius: 2px;

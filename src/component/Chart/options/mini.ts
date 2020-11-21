@@ -35,16 +35,16 @@ const miniEchartOption = (fundGzDetail) => {
     },
     tooltip: {
       trigger: 'axis',
-      position: (point) => [point[0] + 20, 0],
-      backgroundColor: '#fff',
-      borderColor: '#ffddcc',
+      position: (point) => [point[0] + 20, 1],
+      backgroundColor: '#e6f7ff', // $blue1
+      borderColor: '#69c0ff', // $blue4
       borderWidth: 1,
       padding: [3, 5, 3, 5],
       textStyle: {
         color: '#333',
         fontSize: 8,
         fontFamily: 'abc',
-        lineHeight: 14,
+        lineHeight: 13,
         align: 'left',
       },
       formatter: ([s]) => {
@@ -99,12 +99,11 @@ const miniEchartOption = (fundGzDetail) => {
       {
         type: 'line',
         areaStyle: {
-          color: '#ffddcc',
-          opacity: 0.5,
+          color: '#bae7ff', // $blue2
         },
         lineStyle: {
           width: 2,
-          color: '#ff9966',
+          color: '#69c0ff', // $blue4
         },
         data: changeList,
         markPoint: {
@@ -117,13 +116,13 @@ const miniEchartOption = (fundGzDetail) => {
             type: 'max',
             name: '最大值',
             itemStyle: {
-              color: '#e62e00'
+              color: 'red'
             },
           }, {
             type: 'min',
             name: '最小值',
             itemStyle: {
-              color: '#009900',
+              color: 'green',
             },
           }]
         },
