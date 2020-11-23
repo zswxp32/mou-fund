@@ -31,27 +31,13 @@ module.exports = {
     filename: 'js/[name].js',
   },
   module: {
-    rules: [{
-        exclude: /node_modules/,
+    rules: [
+      {
         test: /\.[tj]sx?$/,
-        use: 'ts-loader'
-      },
-      {
-        test: /\.(png|jpg|jpeg|gif)$/,
-        use: [{
-          loader: 'url-loader',
-          options: {
-            limit: 8192,
-            outputPath: './image'
-          }
-        }]
-      },
-      {
-        test: /\.(ttf|eot|svg|woff|woff2)$/,
-        use: 'url-loader'
-      },
-      {
+        use: ['babel-loader', 'ts-loader'],
         exclude: /node_modules/,
+      },
+      {
         test: /\.scss$/,
         use: [{
             loader: 'style-loader' // Creates style nodes from JS strings
@@ -67,7 +53,22 @@ module.exports = {
           {
             loader: 'sass-loader' // Compiles Sass to CSS
           }
-        ]
+        ],
+        exclude: /node_modules/,
+      },
+      {
+        test: /\.(png|jpg|jpeg|gif)$/,
+        use: [{
+          loader: 'url-loader',
+          options: {
+            limit: 8192,
+            outputPath: './image'
+          }
+        }]
+      },
+      {
+        test: /\.(ttf|eot|svg|woff|woff2)$/,
+        use: 'url-loader'
       }
     ]
   },

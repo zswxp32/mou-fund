@@ -32,26 +32,30 @@ const updateBadge = (text: string, color: string): void => {
 }
 
 const refresh = async () => {
-  const fundIds: Array<string> = StorageService.getFundIds();
-  if (fundIds.length) {
-    const data = await EastMoneyService.getFundList(fundIds);
-    const fundListData = new FundList({
-      gzrq: data.Expansion.GZTIME.substr(5),
-      jzrq: data.Expansion.FSRQ.substr(5),
-      ids: fundIds,
-      list: data.Datas,
-    });
-    isTrading = await getIsTrading();
-    updateBadge(...fundListData.totalGainedExpectedString);
-  } else {
+  const getShowBadge: boolean = StorageService.getShowBadge();
+  if (!getShowBadge) {
     updateBadge('', 'white');
+  } else {
+    const fundIds: Array<string> = StorageService.getFundIds();
+    if (fundIds.length) {
+      const data = await EastMoneyService.getFundList(fundIds);
+      const fundListData = new FundList({
+        gzrq: data.Expansion.GZTIME.substr(5),
+        jzrq: data.Expansion.FSRQ.substr(5),
+        ids: fundIds,
+        list: data.Datas,
+      });
+      isTrading = await getIsTrading();
+      updateBadge(...fundListData.totalGainedExpectedString);
+    } else {
+      updateBadge('', 'white');
+    }
   }
   setTimeout(refresh, isTrading ? MIN_INTERVAL : MAX_INTERVAL);
 };
 
 try {
   refresh();
-
   chrome.runtime.onMessage.addListener((request) => {
     switch (request.type) {
       case 'hold_changed':
@@ -61,4 +65,4 @@ try {
         break;
     }
   });
-} catch(e) { console.log(e); }
+} catch (e) { console.log(e); }

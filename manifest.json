@@ -4,7 +4,7 @@
 	"description": "实时查看自选基金涨跌",
 	"version": "__VERSION__",
 	"browser_action": {
-		"default_icon": "icon/5.png",
+		"default_icon": "icon/128.png",
 		"default_popup": "popup.html"
 	},
 	"options_page": "option.html",
@@ -13,12 +13,9 @@
 		"persistent": false
 	},
 	"icons": {
-		"16": "icon/1.png",
-		"24": "icon/2.png",
-		"32": "icon/3.png",
-		"48": "icon/4.png",
-		"64": "icon/5.png",
-		"128": "icon/6.png"
+		"16": "icon/16.png",
+		"48": "icon/48.png",
+		"128": "icon/128.png"
 	},
 	"permissions": [
     "https://*.eastmoney.com/*"

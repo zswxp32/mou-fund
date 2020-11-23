@@ -5,7 +5,7 @@
     "experimentalDecorators": true,
     "jsx": "react",
     "lib": ["ESNext", "dom"],
-    "module": "commonjs",
+    "module": "es6",
     "moduleResolution": "node",
     "outDir": "dist/js",
     "rootDir": "src",

@@ -89,6 +89,12 @@ export default class StorageService {
   static resetFundHold(holds: FundHoldMap): void {
     localStorage.setItem('mou-fund-holds', JSON.stringify(holds));
   }
+
+  static getShowBadge(): boolean {
+    const showStr = localStorage.getItem('mou-fund-badge-show');
+    if (showStr === null || showStr === '') return true;
+    return showStr === '1';
+  }
 }
 
 StorageService.firstBite();

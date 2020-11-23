@@ -259,9 +259,9 @@ export default function PageFundList(): ReactElement {
                           <p className={`bold fs16 ${toNumberColor(gainedPercent)}`}>
                             {gainedPercent ? toPercentString(gainedPercent, true) : '--'}
                           </p>
-                          {gained && <p className={`bold fs14 ${toNumberColor(gained)}`}>
-                            {toNumberPN(gained)}
-                          </p>}
+                          <p className={`bold fs14 ${toNumberColor(gained)}`}>
+                            {gained ? toNumberPN(gained) : '--'}
+                          </p>
                         </div>
                         {/** 最新净值 */}
                         { !editing && <div>

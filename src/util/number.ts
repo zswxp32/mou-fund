@@ -23,21 +23,32 @@ export const toNumberPN = (value: number): string => {
   return value > 0 ? `+${value.toFixed(2)}` : `${value.toFixed(2)}`;
 }
 
-const _min3Str = (value: number) : string => {
+const _min3Str = (value: number, dw: string): string => {
+  let val = '';
   if (value < 10) {
-    return value.toFixed(2);
+    if (dw !== '') {
+      val = value.toFixed(1);
+    } else {
+      val = value.toFixed(2);
+    }
   } else if (value >= 10 && value < 100) {
-    return value.toFixed(1);
-  } else if (value > 100 && value < 1000) {
-    return value.toFixed(0)
+    if (dw !== '') {
+      val = value.toFixed(0);
+    } else {
+      val = value.toFixed(1);
+    }
+  } else if (value >= 100 && value < 1000) {
+    val = value.toFixed(0)
   }
+  return `${val}${dw}`;
 }
 
 export const toNumberBadge = (value: number): [string, string] => {
-  const pn = value > 0 ? 1 : -1;
+  const pn = value !== 0 ? (value > 0 ? 1 : -1) : 0;
   const num = Math.abs(value);
   let numStr = '0';
-  const colorStr = pn >= 0 ? '#F56C6C' : '#4eb61b';
+  const colorStr = pn > 0 ? '#F56C6C' : '#4eb61b';
+  const pnStr = pn !== 0 ? (pn > 0 ? '+' : '-') : '';
 
   const K = 1000;
   const M = 1000 * 1000;
@@ -46,13 +57,13 @@ export const toNumberBadge = (value: number): [string, string] => {
 
   if (value !== 0) {
     if (num < K) {
-      numStr = _min3Str(num);
+      numStr = `${pnStr}${_min3Str(num, '')}`;
     } else if (num >= K && num < M) {
-      numStr = `${_min3Str(num / K)}k`;
+      numStr = `${pnStr}${_min3Str(num / K, 'k')}`;
     } else if (num >= M && num < B) {
-      numStr = `${_min3Str(num / M)}m`;
+      numStr = `${pnStr}${_min3Str(num / M, 'm')}`;
     } else if (num >= B && num < T) {
-      numStr = `${_min3Str(num / B)}b`;
+      numStr = `${pnStr}${_min3Str(num / B, 'b')}`;
     } else {
       numStr = `别闹`;
     }
