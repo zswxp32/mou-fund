@@ -11,10 +11,10 @@
 
 ## 界面预览
 - 基金列表
-![image](https://github.com/zswxp32/mou-fund/blob/master/pic/list.jpg)
+![image](https://github.com/zswxp32/mou-fund/blob/master/pic/1.jpg)
 
 - 基金重仓股票列表
-![image](https://github.com/zswxp32/mou-fund/blob/master/pic/stocks.jpg)
+![image](https://github.com/zswxp32/mou-fund/blob/master/pic/2.jpg)
 
 ## 主要功能
 很多并持续更新中，请保持关注
