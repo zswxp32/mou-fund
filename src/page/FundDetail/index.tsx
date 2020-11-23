@@ -32,16 +32,17 @@ export default function PageFundDetail(): ReactElement {
       let stockProportionTotal = 0;
       let stockIncomeEstimated = 0;
 
-      const _stockInfos = fundStocks.map((item, index) => {
-        stockProportionTotal += parseFloat(item.JZBL);
-        stockIncomeEstimated += item.JZBL * stockInfosRes[index].f3 / 100;
+      const _stockInfos = stockInfosRes.map((item) => {
+        const stock = fundStocks.find(s => s.GPDM === item.f12);
+        stockProportionTotal += parseFloat(stock.JZBL);
+        stockIncomeEstimated += stock.JZBL * item.f3 / 100;
         return {
-          name: item.GPJC,
-          code: item.GPDM,
-          proportion: item.JZBL,
-          price: stockInfosRes[index].f2,
-          change: stockInfosRes[index].f3.toFixed(2),
-          type: stockInfosRes[index].f13,
+          name: item.f14,
+          code: item.f12,
+          proportion: stock.JZBL,
+          price: item.f2,
+          change: item.f3.toFixed(2),
+          type: item.f13,
         };
       });
 

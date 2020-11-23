@@ -147,7 +147,7 @@
     }
   }
 
-  span.updated {
+  span.tips {
     width: 72px;
     height: 16px;
     line-height: 16px;
@@ -162,19 +162,16 @@
     transform: scale(0.8);
   }
 
+  span.updated {
+    background: $blue4;
+  }
+
   span.un_updated {
-    width: 72px;
-    height: 16px;
-    line-height: 16px;
     background: #aaa;
-    border-bottom-left-radius: 4px;
-    color: #fff;
-    text-align: center;
-    position: absolute;
-    right: 0;
-    top: 0px;
-    transform-origin: top right;
-    transform: scale(0.8);
+  }
+
+  span.cant_updated {
+    background: #aaa;
   }
 }
 

@@ -1,5 +1,6 @@
+import EastMoneyService from "../service/eastmoney";
 import StorageService from "../service/storage";
-import { toPercentString } from "../util/number";
+import { toNumberBadge, toPercentString } from "../util/number";
 
 type StringMap = { [key: string]: string };
 
@@ -26,7 +27,7 @@ export class FundDetail {
   gzrq: string; // 估值日期：GZTIME
   gzing: boolean; // 估值更新中（09:30 - 14:59）
 
-  updated: boolean; //估值已更新，判断方式：gzrq == null || jzrq == gzrq
+  updated: boolean; //估值已更新，判断方式：jzrq == gzrq
 
   constructor(data: StringMap) {
     this.code = data.FCODE;
@@ -41,7 +42,7 @@ export class FundDetail {
     this.gzrq = data.GZTIME !== '--' ? data.GZTIME.substr(5, 5) : null;
     this.gzing = data.GZTIME !== '--' ? data.GZTIME.substr(11, 5) < '15:00' : false;
 
-    this.updated = this.gzrq == null || this.jzrq === this.gzrq;
+    this.updated = this.jzrq === this.gzrq;
   }
 
   public get hold(): FundHold {
@@ -63,9 +64,11 @@ export class FundDetail {
   }
 
   public get gainedExpected(): number {
+    // 已更新
     if (this.updated) {
       return (this.jz - this.jz / (1 + this.jzzzl / 100)) * this.hold.count;
     }
+    // 未更新
     if (this.gz) {
       return (this.gz - this.jz) * this.hold.count;
     }
@@ -73,34 +76,44 @@ export class FundDetail {
   }
 }
 
+interface FundListProps {
+  gzrq?: string;
+  jzrq?: string;
+  ids?: string[];
+  list?: StringMap[];
+  items?: Map<string, FundDetail>; 
+}
+
 export class FundList {
   gzrq: string;
   jzrq: string;
-  items: FundDetail[];
+  ids: string[];
+  items: Map<string, FundDetail>;
 
-  constructor(gzrq: string, list: StringMap[]) {
-    this.gzrq = gzrq;
-    if (list && list.length) {
-      this.items = list.map(item => new FundDetail(item));
-      this.jzrq = this.items[0].jzrq;
-    } else {
-      this.items = [];
+  constructor(props: FundListProps = {}) {
+    this.gzrq = props.gzrq || '';
+    this.jzrq = props.jzrq || '';
+    this.ids = props.ids || [];
+    this.items = props.items || new Map();
+    if (props.list && props.list.length > 0) {
+      this._initItems(props.list || []);
     }
     this._initJzrq();
   }
 
+  private _initItems(list: StringMap[]): void {
+    list.forEach(item => this.items.set(item.FCODE, new FundDetail(item)));
+  }
+
   private _initJzrq(): void {
-    for (let i = 0; i < this.items.length; i++) {
-      if (this.items[i].jzrq > this.jzrq) {
-        this.jzrq = this.items[i].jzrq;
+    // 只要有一个基金收益已更新，则将header中的净值日期改为更新日期
+    for (let i = 0; i < this.ids.length; i++) {
+      const item = this.items.get(this.ids[i]);
+      if (this.jzrq < item.jzrq) {
+        this.jzrq = item.jzrq;
         break;
       }
     }
-  }
-
-  setItems(items: FundDetail[]): FundList {
-    this.items = items;
-    return this;
   }
 
   public get totalMoney(): number {
@@ -122,7 +135,78 @@ export class FundList {
 
   public get totalGainedExpected(): number {
     let total = 0;
-    this.items.forEach(item => total += item.gainedExpected);
+    this.items.forEach(item => {
+      if (item.gainedExpected !== null) {
+        total += item.gainedExpected;
+      }
+    });
     return total;
+  }
+
+  public get totalGainedExpectedString(): [string, string] {
+    let total = 0;
+    this.items.forEach(item => {
+      if (item.gainedExpected !== null) {
+        total += item.gainedExpected;
+      }
+    });
+    return toNumberBadge(total);
+  }
+
+  public async addFund(fundId: string): Promise<FundList> {
+    const list = await EastMoneyService.getFundList([fundId]);
+    if (list && list.Datas && list.Datas[0]) {
+      const newIds = StorageService.addFundById(fundId);
+      const newItems = new Map(this.items).set(fundId, new FundDetail(list.Datas[0]));
+      StorageService.addFundHold({ code: fundId, count: 0, cost: 0 });
+      return new FundList({
+        gzrq: this.gzrq,
+        jzrq: this.jzrq,
+        ids: newIds,
+        items: newItems,
+      });
+    }
+    return this;
+  }
+
+  public deleteFund(fundId: string): FundList {
+    const idIndex = this.ids.indexOf(fundId);
+    if (idIndex >= 0) {
+      const newIds = StorageService.deleteFundById(fundId);
+      const newItems = new Map(this.items);
+      newItems.delete(fundId);
+      return new FundList({
+        gzrq: this.gzrq,
+        jzrq: this.jzrq,
+        ids: newIds,
+        items: newItems,
+      });
+    }
+    return this;
+  }
+
+  public updateHold(fundId: string, key: string, value: any): FundList {
+    const val = value.trim();
+    if (isNaN(val / 1)) return this;
+    StorageService.updateFundHold({
+      code: fundId,
+      [key]: val / 1,
+    });
+    return new FundList({
+      gzrq: this.gzrq,
+      jzrq: this.jzrq,
+      ids: this.ids,
+      items: this.items,
+    });
+  }
+
+  public reorderFunds(fundIds: string[]): FundList {
+    const newIds = StorageService.resetFundIds(fundIds);
+    return new FundList({
+      gzrq: this.gzrq,
+      jzrq: this.jzrq,
+      ids: newIds,
+      items: this.items,
+    });
   }
 }

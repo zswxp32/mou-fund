@@ -53,8 +53,9 @@ export default class StorageService {
     return fundIds;
   }
 
-  static resetFundIds(fundIds: string[]): void {
+  static resetFundIds(fundIds: string[]): string[] {
     localStorage.setItem('mou-fund-ids', fundIds.toString());
+    return fundIds;
   }
 
   static getFundHolds(): FundHoldMap {

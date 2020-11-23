@@ -2,6 +2,7 @@ import axios, { AxiosInstance } from 'axios';
 import { FundList } from '../model/fund';
 
 const FundApi = {
+  SystemTime: '/FundMApi/FundSystemDateTime.ashx',
   FundList: '/FundMNewApi/FundMNFInfo',
   FundStock: '/FundMNewApi/FundMNInverstPosition',
   FundGzDetail: '/FundMApi/FundVarietieValuationDetail.ashx',
@@ -73,7 +74,12 @@ export default class EastMoneyService {
     return list;
   }
 
-  static async getFundList(fundIds: string[]): Promise<FundList> {
+  static async getSystemTime(): Promise<[string, boolean]> {
+    const res = await this.instance.fundAxios.get(FundApi.SystemTime);
+    return [res.data.Datas.SystemDateTime, res.data.Datas.IsTradeDay];
+  }
+
+  static async getFundList(fundIds: string[]): Promise<any> {
     const Fcodes = fundIds.toString();
     const res = await this.instance.fundAxios.get(FundApi.FundList, {
       params: {
@@ -83,10 +89,7 @@ export default class EastMoneyService {
         Fcodes,
       },
     });
-    return new FundList(
-      res.status === 200 ? res.data.Expansion.GZTIME.substr(5) : '',
-      res.status === 200 ? res.data.Datas : [],
-    );
+    return res.status === 200 ? res.data : null;
   }
 
   static async getFundStocks(fundId: string) {
