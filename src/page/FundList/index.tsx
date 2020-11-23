@@ -157,7 +157,7 @@ export default function PageFundList(): ReactElement {
   }, [refreshing]);
 
   const buildTips = (item: FundDetail) => {
-    if (editing) return null;
+    if (editing || item.gzing) return null;
     if (item.gainedExpected !== null) {
       if (item.updated) {
         return <span className={`${styles.tips} ${styles.updated}`}>净值已更新</span>;
