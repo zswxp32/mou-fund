@@ -28,6 +28,7 @@ export class FundDetail {
   gzing: boolean; // 估值更新中（09:30 - 14:59）
 
   updated: boolean; //估值已更新，判断方式：jzrq == gzrq
+  isETF: boolean; // 是否ETF
 
   constructor(data: StringMap) {
     this.code = data.FCODE;
@@ -43,6 +44,7 @@ export class FundDetail {
     this.gzing = data.GZTIME !== '--' ? data.GZTIME.substr(11, 5) < '15:00' : false;
 
     this.updated = this.jzrq === this.gzrq;
+    this.isETF = data.HQDATE !== '--';
   }
 
   public get hold(): FundHold {
@@ -54,23 +56,26 @@ export class FundDetail {
   }
 
   public get gained(): number {
-    if (this.hold.cost === 0 || this.hold.count === 0) return null;
-    return (this.jz - this.hold.cost) * this.hold.count;
+    const { cost, count } = this.hold;
+    if (cost === 0 || count === 0) return null;
+    return (this.jz - cost) * count;
   }
 
   public get gainedPercent(): number {
-    if (this.hold.cost === 0) return null;
-    return (this.jz - this.hold.cost) / this.hold.cost * 100;
+    const { cost } = this.hold;
+    if (cost === 0) return null;
+    return (this.jz - cost) / cost * 100;
   }
 
   public get gainedExpected(): number {
+    const { count } = this.hold;
     // 已更新
     if (this.updated) {
-      return (this.jz - this.jz / (1 + this.jzzzl / 100)) * this.hold.count;
+      return (this.jz - this.jz / (1 + this.jzzzl / 100)) * count;
     }
     // 未更新
     if (this.gz) {
-      return (this.gz - this.jz) * this.hold.count;
+      return (this.gz - this.jz) * count;
     }
     return null;
   }

@@ -229,7 +229,7 @@ export default function PageFundList(): ReactElement {
               >
                 { fundListData.ids.map((id, index) => {
                   const item = fundListData.items.get(id);
-                  const { code, name, jz, jzzzl, gz, gzzzl, money, gained, gainedPercent, gainedExpected } = item;
+                  const { code, name, jz, jzzzl, gz, gzzzl, money, gained, gainedPercent, gainedExpected, isETF } = item;
                   const { cost, count } = fundHolds[id];
                   return <Draggable key={code} draggableId={code} index={index}>
                     {(provided) => (
@@ -244,7 +244,10 @@ export default function PageFundList(): ReactElement {
                           <p className="bold">
                             <Link className={styles.fund_link} title={name} to={`/fund/detail/${code}`}>{name}</Link>
                           </p>
-                          <p className="fs14">{code}</p>
+                          <p className="fs14">
+                            <span>{code}</span>
+                            {isETF && <span className={styles.etf}>场内ETF</span>}
+                          </p>
                         </div>
                         {/** 涨跌走势图 */}
                         { !editing && <div className={styles.chart} style={{ fontSize: 0 }}>

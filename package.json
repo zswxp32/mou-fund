@@ -1,7 +1,7 @@
 {
   "name": "mou-fund",
   "name_ch": "大牛基金助手",
-  "version": "1.4.2",
+  "version": "1.4.4",
   "description": "大牛基金助手，实时查看你的自选基金涨跌状况，祝你牛气冲天！",
   "author": "zswxp32@163.com",
   "license": "MIT",
@@ -13,13 +13,15 @@
     "pack": "npm run build && node ./scripts/pack.js"
   },
   "dependencies": {
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
+    "@rematch/core": "^1.4.0",
     "axios": "^0.21.0",
     "axios-jsonp": "^1.0.4",
     "echarts": "^4.9.0",
     "echarts-for-react": "^2.0.16",
+    "react": "^16.13.1",
     "react-beautiful-dnd": "^13.0.0",
+    "react-dom": "^16.13.1",
+    "react-redux": "^7.2.2",
     "react-router-dom": "^5.2.0",
     "uuid": "^8.3.1"
   },
@@ -29,6 +31,7 @@
     "@types/chrome": "^0.0.60",
     "@types/react": "^16.9.32",
     "@types/react-dom": "^16.9.6",
+    "@types/react-redux": "^7.1.11",
     "@typescript-eslint/eslint-plugin": "^4.6.1",
     "@typescript-eslint/parser": "^4.6.1",
     "babel-loader": "^8.2.1",

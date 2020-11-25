@@ -5,7 +5,7 @@
   height: 25px;
   padding: 5px;
   z-index: 1;
-  background: rgba(255,255,255,0.9);
+  background: rgba(255, 255, 255, 0.9);
 }
 
 .search {
@@ -82,6 +82,10 @@
 .list_line {
   display: flex;
   justify-content: space-between;
+
+  &>div {
+    position: relative;
+  }
 }
 
 .list_header {
@@ -236,4 +240,19 @@
 .stock_indexs {
   height: 60px;
   margin-bottom: 5px;
+}
+
+.etf {
+  display: inline-block;
+  width: 54px;
+  height: 15px;
+  border-radius: 3px;
+  margin-left: 5px;
+  text-align: center;
+  line-height: 16px;
+  background: $blue5;
+  color: #fff;
+  transform: scale(0.8);
+  font-weight: bold;
+  letter-spacing: 1px;
 }
