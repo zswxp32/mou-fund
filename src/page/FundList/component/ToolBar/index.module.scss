@@ -1,0 +1,62 @@
+@import '../../../../style/var.scss';
+
+.tool_bar {
+  position: relative;
+  height: 25px;
+  padding: 5px;
+  z-index: 1;
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.search {
+  position: relative;
+  float: left;
+  width: 300px;
+  height: 25px;
+
+  .search_input {
+    position: relative;
+    display: block;
+    width: 288px;
+    height: 23px;
+    line-height: 24px;
+    padding: 0 5px;
+    border: 1px solid $blue7;
+    background: #fff;
+
+    &::placeholder {
+      color: #999;
+    }
+
+    &:focus {
+      outline: none;
+      border-color: $blue8;
+      box-shadow: 0 0 3px $blue4;
+    }
+  }
+
+  .search_cancle {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    width: 14px;
+    height: 14px;
+    line-height: 12px;
+    text-align: center;
+    background: #bbb;
+    border-radius: 9px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #fff;
+    cursor: pointer;
+
+    &:hover {
+      background: #aaa;
+    }
+  }
+}
+
+.tools {
+  float: right;
+  display: flex;
+}

@@ -6,6 +6,7 @@ const pkgStore = require('pkg-store');
 const init = require('./scripts/init');
 init();
 
+const resolve = dir => path.resolve(__dirname, dir);
 const pkgData = new pkgStore(process.cwd()).read();
 
 function getName() {
@@ -73,7 +74,17 @@ module.exports = {
     ]
   },
   resolve: {
-    extensions: ['.ts', '.tsx', '.js', 'jsx']
+    extensions: ['.ts', '.tsx', '.js', 'jsx'],
+    alias: {
+      '@Component': resolve('src/component'),
+      '@Config': resolve('src/config'),
+      '@Image': resolve('src/image'),
+      '@Model': resolve('src/model'),
+      '@Service': resolve('src/service'),
+      '@Style': resolve('src/style'),
+      '@Util': resolve('src/util'),
+      '@Type': resolve('src/type'),
+    },
   },
   plugins: [
     new webpack.DefinePlugin({

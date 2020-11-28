@@ -1,5 +1,6 @@
+import { StockInfo } from '@Type/stock';
 import axios, { AxiosInstance } from 'axios';
-import { FundList } from '../model/fund';
+import { FundTrends } from '../model/fund';
 
 const FundApi = {
   SystemTime: '/FundMApi/FundSystemDateTime.ashx',
@@ -55,25 +56,6 @@ export default class EastMoneyService {
     return this._instance;
   }
 
-  static async searchFund(str: string) {
-    const res = await this.instance.searchAxis.get(SearchApi.Fund, {
-      params: {
-        m: 9,
-        key: str,
-        '&_': Date.now(),
-      }
-    });
-    const list = [];
-    if (res.data && res.data.Datas && res.data.Datas.length > 0) {
-      res.data.Datas.forEach(item => {
-        if (item.CATEGORY === 700 && item.FundBaseInfo.FTYPE !== '货币型') {
-          list.push(item);
-        }
-      });
-    }
-    return list;
-  }
-
   static async getSystemTime(): Promise<[string, boolean]> {
     const res = await this.instance.fundAxios.get(FundApi.SystemTime);
     return [res.data.Datas.SystemDateTime, res.data.Datas.IsTradeDay];
@@ -101,11 +83,7 @@ export default class EastMoneyService {
     return res.status === 200 ? res.data.Datas.fundStocks : null;
   }
 
-  /**
-   * 获取基金当日今日估值走势
-   * @param {*} fundId 
-   */
-  static async getFundGzDetail(fundId: string) {
+  static async getFundTrends(fundId: string): Promise<FundTrends> {
     const res = await this.instance.fundAxios.get(FundApi.FundGzDetail, {
       params: {
         FCODE: fundId,
@@ -113,8 +91,8 @@ export default class EastMoneyService {
       },
     });
     return res.status === 200 ? {
-      gzDetail: res.data.Datas,
-      fundBaseInfo: res.data.Expansion,
+      dwjz: res.data.Expansion.DWJZ,
+      list: res.data.Datas,
     } : null;
   }
 
@@ -128,7 +106,7 @@ export default class EastMoneyService {
     return res.status === 200 ? res.data.Datas : null;
   }
 
-  static async getStockList(stocks) {
+  static async getStockList(stocks): Promise<StockInfo[]> {
     const fields = 'f1,f2,f3,f4,f12,f13,f14';
     const fltt = 2;
     const secids = stocks.map((item) => `${item.NEWTEXCH}.${item.GPDM}`).toString();
@@ -158,5 +136,20 @@ export default class EastMoneyService {
       }
     });
     return res.status === 200 ? res.data.data : null;
+  }
+
+  static async searchFund(str: string) {
+    const res = await this.instance.searchAxis.get(SearchApi.Fund, {
+      params: { m: 9, key: str, '&_': Date.now() }
+    });
+    const list = [];
+    if (res.data && res.data.Datas && res.data.Datas.length > 0) {
+      res.data.Datas.forEach(item => {
+        if (item.CATEGORY === 700 && item.FundBaseInfo.FTYPE !== '货币型') {
+          list.push(item);
+        }
+      });
+    }
+    return list;
   }
 }

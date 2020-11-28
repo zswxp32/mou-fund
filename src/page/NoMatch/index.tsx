@@ -1,5 +1,7 @@
 import React from "react";
 
-export default function PageNoMatch() {
+const PageNoMatch: React.FC = () => {
   return <div>404</div>;
 }
+
+export default PageNoMatch;

@@ -1,14 +1,15 @@
-.stock_index {
+.stock_indexs {
   display: flex;
   justify-content: space-around;
   height: 60px;
+  margin-bottom: 5px;
   color: #fff;
 }
 
 .item {
   display: flex;
-  height: 60px;
-  text-align: center;
   flex-direction: column;
   justify-content: space-between;
+  height: 60px;
+  text-align: center;
 }

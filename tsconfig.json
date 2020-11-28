@@ -10,6 +10,17 @@
     "outDir": "dist/js",
     "rootDir": "src",
     "sourceMap": true,
-    "target": "es5"
+    "target": "es5",
+    "baseUrl": "./",
+    "paths": {
+      "@Component/*": ["src/component/*"],
+      "@Config/*": ["src/config/*"],
+      "@Image/*": ["src/image/*"],
+      "@Model/*": ["src/model/*"],
+      "@Service/*": ["src/service/*"],
+      "@Style/*": ["src/style/*"],
+      "@Util/*": ["src/util/*"],
+      "@Type/*": ["src/type/*"]
+    }
   }
 }

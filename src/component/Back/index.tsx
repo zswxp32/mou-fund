@@ -1,8 +1,8 @@
-import React, { ReactElement } from 'react';
+import React from 'react';
 import styles from './index.module.scss';
 import { useHistory } from "react-router-dom";
 
-export function Back(): ReactElement {
+export const Back: React.FC = () => {
   const history = useHistory();
 
   return <div className={styles.back}>

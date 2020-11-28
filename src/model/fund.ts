@@ -4,6 +4,16 @@ import { toNumberBadge, toPercentString } from "../util/number";
 
 type StringMap = { [key: string]: string };
 
+export enum FundsMode {
+	simplify,
+	standard,
+}
+
+export type FundTrends = {
+	dwjz: number,
+	list: string[],
+};
+
 export type FundHold = {
   code: string;
   cost?: number;
@@ -161,7 +171,7 @@ export class FundList {
   public async addFund(fundId: string): Promise<FundList> {
     const list = await EastMoneyService.getFundList([fundId]);
     if (list && list.Datas && list.Datas[0]) {
-      const newIds = StorageService.addFundById(fundId);
+      const newIds = StorageService.addFund(fundId);
       const newItems = new Map(this.items).set(fundId, new FundDetail(list.Datas[0]));
       StorageService.addFundHold({ code: fundId, count: 0, cost: 0 });
       return new FundList({
@@ -177,7 +187,7 @@ export class FundList {
   public deleteFund(fundId: string): FundList {
     const idIndex = this.ids.indexOf(fundId);
     if (idIndex >= 0) {
-      const newIds = StorageService.deleteFundById(fundId);
+      const newIds = StorageService.deleteFund(fundId);
       const newItems = new Map(this.items);
       newItems.delete(fundId);
       return new FundList({
@@ -206,7 +216,7 @@ export class FundList {
   }
 
   public reorderFunds(fundIds: string[]): FundList {
-    const newIds = StorageService.resetFundIds(fundIds);
+    const newIds = StorageService.setFundIds(fundIds);
     return new FundList({
       gzrq: this.gzrq,
       jzrq: this.jzrq,

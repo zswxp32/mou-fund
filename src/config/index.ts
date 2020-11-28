@@ -1,4 +1,4 @@
-export const StockIndexCodeList = [
+export const StockIndexsCodes = [
   {
     NEWTEXCH: 1,
     GPDM: '000001',

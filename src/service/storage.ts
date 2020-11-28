@@ -1,8 +1,7 @@
-import { v4 as uuid } from 'uuid';
-import { FundHold, FundHoldMap } from '../model/fund';
+import { FundsMode, FundHold, FundHoldMap } from '../model/fund';
 
-const INIT_FUND_IDS: string[] = ['161725', '005598', '320007', '161726', '161028'];
-const INIT_FUND_MAP: FundHoldMap = {};
+const INIT_FUND_IDS = ['161725', '005598', '320007', '161726', '161028'];
+const INIT_FUND_MAP = {};
 INIT_FUND_IDS.forEach(id => INIT_FUND_MAP[id] = { code: id, count: 0, cost: 0, });
 
 export default class StorageService {
@@ -10,19 +9,23 @@ export default class StorageService {
     const first = localStorage.getItem('first-bite');
     if (first !== '1') {
       localStorage.setItem('first-bite', '1');
-      // 首次内置5只
-      this.resetFundIds(INIT_FUND_IDS);
-      this.resetFundHold(INIT_FUND_MAP);
+      this.setMode(FundsMode.standard);
+      this.setFundIds(INIT_FUND_IDS);
+      this.setFundHold(INIT_FUND_MAP);
     }
   }
 
-  static getDeviceId(): string {
-    const id = localStorage.getItem('deviceid');
-    if (id) return id;
+  static getMode(): FundsMode {
+    const modeStr = localStorage.getItem('mou-fund-mode');
+    if (modeStr === null || modeStr === '0') {
+      return FundsMode.standard;
+    }
+    return FundsMode.simplify;
+  }
 
-    const newId = uuid();
-    localStorage.setItem('deviceid', newId);
-    return newId;
+  static setMode(mode: FundsMode): void {
+    const modeStr = mode === FundsMode.standard ? '0' : '1';
+    localStorage.setItem('mou-fund-mode', modeStr);
   }
 
   static getFundIds(): string[] {
@@ -31,7 +34,12 @@ export default class StorageService {
     return fundIdsStr.split(',');
   }
 
-  static addFundById(fundId: string): string[] {
+  static setFundIds(fundIds: string[]): string[] {
+    localStorage.setItem('mou-fund-ids', fundIds.toString());
+    return fundIds;
+  }
+
+  static addFund(fundId: string): string[] {
     const fundIds = this.getFundIds();
     if (fundIds.includes(fundId)) {
       alert('这只基金你之前已经添加过了哦 ~');
@@ -42,18 +50,10 @@ export default class StorageService {
     return fundIds;
   }
 
-  static deleteFundById(fundId: string): string[] {
+  static deleteFund(fundId: string): string[] {
     const fundIds = this.getFundIds();
-    if (!fundIds.includes(fundId)) {
-      alert('你还没有添加过这只基金哦 ~');
-      return;
-    }
+    if (!fundIds.includes(fundId)) return fundIds;
     fundIds.splice(fundIds.indexOf(fundId), 1);
-    localStorage.setItem('mou-fund-ids', fundIds.toString());
-    return fundIds;
-  }
-
-  static resetFundIds(fundIds: string[]): string[] {
     localStorage.setItem('mou-fund-ids', fundIds.toString());
     return fundIds;
   }
@@ -62,14 +62,14 @@ export default class StorageService {
     const fundHoldsStr = localStorage.getItem('mou-fund-holds');
     if (!fundHoldsStr) return {};
     // replace for my bad
-    return JSON.parse(fundHoldsStr.replaceAll('hold', 'count'));
+    return JSON.parse(fundHoldsStr.replace(/hold/g, 'count'));
   }
 
   static addFundHold(hold: FundHold): FundHoldMap {
     const fundHolds = this.getFundHolds();
     if (!fundHolds[hold.code]) {
       fundHolds[hold.code] = hold;
-      this.resetFundHold(fundHolds);
+      this.setFundHold(fundHolds);
     }
     return fundHolds;
   }
@@ -81,12 +81,12 @@ export default class StorageService {
         ...fundHolds[hold.code],
         ...hold,
       };
-      this.resetFundHold(fundHolds);
+      this.setFundHold(fundHolds);
     }
     return fundHolds;
   }
 
-  static resetFundHold(holds: FundHoldMap): void {
+  static setFundHold(holds: FundHoldMap): void {
     localStorage.setItem('mou-fund-holds', JSON.stringify(holds));
   }
 

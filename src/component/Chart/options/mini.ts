@@ -1,4 +1,5 @@
-import { toPercentString, toPercentColor } from '../../../util/number';
+import { toPercentString, toPercentColor } from '@Util/number';
+import { FundTrends } from '@Model/fund';
 
 const timeList = [];
 for (let i = 0; i < 242; i++) {
@@ -13,9 +14,9 @@ for (let i = 0; i < 242; i++) {
   timeList.push(`${h}:${m}`);
 }
 
-const miniEchartOption = (fundGzDetail) => {
+const miniEchartOption = (trendsData: FundTrends) => {
   const changeList = [];
-  fundGzDetail.gzDetail.forEach(str => {
+  trendsData.list.forEach(str => {
     const temp = str.split(',');
     changeList.push(parseFloat(temp[2]));
   });
@@ -51,7 +52,7 @@ const miniEchartOption = (fundGzDetail) => {
         return `
           时间：${s.axisValue}<br/>
           涨跌：<span class="${toPercentColor(s.value)}">${toPercentString(s.value, true)}</span><br/>
-          净值：${(fundGzDetail.fundBaseInfo.DWJZ * (1 + parseFloat(s.value) / 100)).toFixed(4)}
+          净值：${(trendsData.dwjz * (1 + parseFloat(s.value) / 100)).toFixed(4)}
         `;
       },
     },

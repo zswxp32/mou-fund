@@ -94,7 +94,7 @@ export default function PageFundDetail(): ReactElement {
                 {item.name} ({item.code})
               </div>
               <div className={styles.chart} style={{ fontSize: 0 }}>
-                <ChartCandle stockId={item.code} stockCandleData={stockTrends[item.code]} />
+                <ChartCandle stockCandleData={stockTrends[item.code]} />
               </div>
               <div className="fs14">{item.price}</div>
               <div className={`bold fs14 ${toPercentColor(item.change)}`}>

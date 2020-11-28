@@ -1,7 +1,7 @@
 {
   "name": "mou-fund",
   "name_ch": "大牛基金助手",
-  "version": "1.4.4",
+  "version": "1.4.5",
   "description": "大牛基金助手，实时查看你的自选基金涨跌状况，祝你牛气冲天！",
   "author": "zswxp32@163.com",
   "license": "MIT",
@@ -13,7 +13,7 @@
     "pack": "npm run build && node ./scripts/pack.js"
   },
   "dependencies": {
-    "@rematch/core": "^1.4.0",
+    "@rematch/core": "^2.0.0-next.6",
     "axios": "^0.21.0",
     "axios-jsonp": "^1.0.4",
     "echarts": "^4.9.0",
