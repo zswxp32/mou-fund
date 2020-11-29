@@ -1,6 +1,5 @@
 import React, { useEffect, ReactElement } from 'react';
 import { Provider, useDispatch } from 'react-redux';
-
 import { Version } from '@Component/Version';
 
 import { StockIndexs } from './component/StockIndexs';
@@ -10,9 +9,7 @@ import { Dispatch, store } from './store';
 
 import '../../style/global.scss';
 
-function PageFundList(): ReactElement {
-  console.log('[build] PageFundList');
-
+const PageFundList: React.FC = () => {
   const dispatch = useDispatch<Dispatch>();
 
   useEffect(() => {

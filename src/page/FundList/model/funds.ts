@@ -1,8 +1,11 @@
-import { LoadStatus } from '@Type/index';
-import { FundsMode, FundDetail, FundTrends } from '@Model/fund';
 import { createModel } from '@rematch/core';
+
+import { FundHelper } from '@Util/fundHelper';
+import { LoadStatus, FundsMode } from '@Type/index';
+import { FundDetail, FundTrends } from '@Model/fund';
 import EastMoneyService from '@Service/eastmoney';
 import StorageService from '@Service/storage';
+import ChromeService from '@Service/chrome';
 
 import { RootModel } from '.';
 
@@ -21,7 +24,7 @@ export const funds = createModel<RootModel>()({
 	name: 'funds',
 	state: {
 		status: LoadStatus.loaded,
-		mode: FundsMode.standard,
+		mode: StorageService.getMode(),
 		editing: false,
 		gzrqT: '',
 		jzrqT: '',
@@ -32,7 +35,7 @@ export const funds = createModel<RootModel>()({
 	reducers: {
 		switchMode: (state): FundsState => {
 			const newMode = state.mode === FundsMode.simplify ? FundsMode.standard : FundsMode.simplify;
-			StorageService
+			StorageService.setMode(newMode);
 			return { ...state, mode: newMode };
 		},
 		switchEditing: (state): FundsState => {
@@ -47,36 +50,37 @@ export const funds = createModel<RootModel>()({
 		},
 		updateFunds: (state, res: { [key: string]: any }): FundsState => {
 			const items = new Map();
+			let jzrqT = res.Expansion.FSRQ.substr(5);
+			const gzrqT = res.Expansion.GZTIME.substr(5);
 			res.Datas.forEach(d => items.set(d.FCODE, new FundDetail(d)));
-			return {
-				...state,
-				status: LoadStatus.loaded,
-				gzrqT: res.Expansion.GZTIME.substr(5),
-				jzrqT: res.Expansion.FSRQ.substr(5),
-				items,
-			};
+			// 只要有一个基金收益已更新，则将header中的净值日期改为更新日期
+			for (let i = 0; i < res.Datas.length; i++) {
+				const item = items.get(res.Datas[i].FCODE);
+				if (jzrqT < item.jzrq) {
+					jzrqT = item.jzrq;
+					break;
+				}
+			}
+			return { ...state, status: LoadStatus.loaded, jzrqT, gzrqT, items };
 		},
 		addFund: (state, { code, item }: { code: string, item: FundDetail }): FundsState => {
-			StorageService.addFund(code);
+			const newItems = new Map(state.items).set(code, item);
+			const newCodes = StorageService.addFund(code);
 			StorageService.addFundHold({ code, count: 0, cost: 0 });
+			ChromeService.sendMessage('hold_changed', FundHelper.totalGainedExpectedString(newItems));
 			return {
 				...state,
-				codes: [code, ...state.codes],
-				items: new Map(state.items).set(code, item),
+				codes: newCodes,
+				items: newItems,
 			};
 		},
 		deleteFund: (state, code: string): FundsState => {
 			const index = state.codes.indexOf(code);
 			if (index >= 0) {
-				const newCodes = StorageService.deleteFund(code);
 				const newItems = new Map(state.items);
 				newItems.delete(code);
-				// try {
-				// 	chrome.runtime.sendMessage({
-				// 		type: 'hold_changed',
-				// 		value: data.totalGainedExpectedString,
-				// 	});
-				// } catch (e) { console.log(e); }
+				const newCodes = StorageService.deleteFund(code);
+				ChromeService.sendMessage('hold_changed', FundHelper.totalGainedExpectedString(newItems));
 				return {
 					...state,
 					codes: newCodes,
@@ -86,10 +90,12 @@ export const funds = createModel<RootModel>()({
 			return state;
 		},
 		updateFundHold: (state, { code, k, v }: { code: string, k: string, v: number }): FundsState => {
+			const newItems = new Map(state.items);
 			StorageService.updateFundHold({ code: code, [k]: v });
+			ChromeService.sendMessage('hold_changed', FundHelper.totalGainedExpectedString(newItems));
 			return {
 				...state,
-				items: new Map(state.items),
+				items: newItems,
 			};
 		},
 		clearTrends: (state): FundsState => {

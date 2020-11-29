@@ -3,10 +3,10 @@ import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
-import { LoadStatus } from '@Type/index';
+import { LoadStatus, FundsMode } from '@Type/index';
 import { toNumberColor, toNumberPN, toPercentColor, toPercentString } from '@Util/number';
 import { FundHelper } from '@Util/fundHelper';
-import { FundsMode, FundDetail } from '@Model/fund';
+import { FundDetail } from '@Model/fund';
 import { BlockLoading } from '@Component/Loading';
 import { ChartMini } from '@Component/Chart';
 import noDataImg from '@Image/no_data.jpg';
@@ -39,7 +39,6 @@ export const Funds: React.FC = () => {
   };
 
   const buildListHeader = useMemo(() => {
-    console.log('[build] ListHeader');
     const simplify = mode === FundsMode.simplify;
     return <div className={styles.list_header}>
       <div className={styles.list_line}>
@@ -67,7 +66,6 @@ export const Funds: React.FC = () => {
   }, [mode, editing, jzrqT, gzrqT]);
 
   const buildListBody = useMemo(() => {
-    console.log('[build] ListBody', mode);
     if (status === LoadStatus.loading) {
       return <div className={styles.list_body} style={{ height: `${codes.length * 50}px` }}>
         <BlockLoading />
@@ -148,7 +146,7 @@ export const Funds: React.FC = () => {
                       </p>}
                     </div>}
                     {/** 预估收益 */}
-                    { !editing && <div className={`bold fs18 ${toNumberColor(gainedExpected)}`}>
+                    { !editing && <div className={`bold fs16 ${toNumberColor(gainedExpected)}`}>
                       {toNumberPN(gainedExpected)}
                     </div>}
 
@@ -180,14 +178,15 @@ export const Funds: React.FC = () => {
   }, [status, mode, editing, codes, items, trends]);
 
   const buildListFooter = useMemo(() => {
-    console.log('[build] ListFooter', trends.size);
     if (status === LoadStatus.loading || codes.length === 0) {
       return <div className={styles.list_footer}></div>;
     }
+
+    const simplify = mode === FundsMode.simplify;
     return items.size > 0 && <div className={styles.list_footer}>
       <div className={styles.list_line}>
         <div className="tl">总览</div>
-        {!editing && <div className={styles.chart}></div>}
+        {!editing && !simplify && <div className={styles.chart}></div>}
         <div className={`bold fs14`}>
           {FundHelper.totalMoney(items).toFixed(2)}
         </div>
@@ -201,7 +200,7 @@ export const Funds: React.FC = () => {
         </div>
         {!editing && <div></div>}
         {!editing && <div></div>}
-        {!editing && <div className={`bold fs18 ${toNumberColor(FundHelper.totalGainedExpected(items))}`}>
+        {!editing && <div className={`bold fs16 ${toNumberColor(FundHelper.totalGainedExpected(items))}`}>
           {toNumberPN(FundHelper.totalGainedExpected(items))}
         </div>}
         {editing && <div></div>}
@@ -209,7 +208,7 @@ export const Funds: React.FC = () => {
         {editing && <div></div>}
       </div>
     </div>;
-  }, [status, editing, codes, items]);
+  }, [status, mode, editing, codes, items]);
 
   const buildTips = (item: FundDetail) => {
     if (editing || item.gzing) return null;

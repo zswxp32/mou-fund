@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { FundsMode } from '@Model/fund';
+import { FundsMode } from '@Type/index';
 import { Switch } from '@Component/Switch';
 
 import { Dispatch, RootState } from '../../store';
@@ -9,8 +9,6 @@ import { SearchResult } from '../SearchResult';
 import styles from './index.module.scss';
 
 export const ToolBar: React.FC = () => {
-  console.log('[build] ToolBar');
-
   const dispatch = useDispatch<Dispatch>();
   const { searchStr, searchBoxShow, searchResult, searchStatus } = useSelector(
     (state: RootState) => state.toolBar

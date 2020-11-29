@@ -1,4 +1,5 @@
-import { FundsMode, FundHold, FundHoldMap } from '../model/fund';
+import { FundsMode } from '@Type/index';
+import { FundHold, FundHoldMap } from '../model/fund';
 
 const INIT_FUND_IDS = ['161725', '005598', '320007', '161726', '161028'];
 const INIT_FUND_MAP = {};

@@ -1,15 +1,15 @@
 import React, { ReactElement, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-import { useLatest } from '../../util/hooks';
-import { toPercentString, toPercentColor } from '../../util/number';
-import { PageLoading } from '../../component/Loading';
-import { Back } from '../../component/Back';
-import EastMoneyService from '../../service/eastmoney';
+import { useLatest } from '@Util/hooks';
+import { toPercentString, toPercentColor } from '@Util/number';
+import EastMoneyService from '@Service/eastmoney';
+import { PageLoading } from '@Component/Loading';
+import { Back } from '@Component/Back';
+import { ChartCandle } from '@Component/Chart';
 
 import '../../style/global.scss';
 import styles from './index.module.scss';
-import { ChartCandle } from '../../component/Chart';
 
 type StockInfo = {
   list: any[],

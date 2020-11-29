@@ -1,6 +1,8 @@
-import { FundList } from './model/fund';
-import EastMoneyService from './service/eastmoney';
-import StorageService from './service/storage';
+import { FundHelper } from '@Util/fundHelper';
+import { FundDetail } from '@Model/fund';
+import EastMoneyService from '@Service/eastmoney';
+import StorageService from '@Service/storage';
+import ChromeService from '@Service/chrome';
 
 const MAX_INTERVAL = 10 * 60 * 1000; // 10分钟
 const MIN_INTERVAL = 10 * 1000; // 10秒钟
@@ -21,14 +23,8 @@ const getIsTrading = async (): Promise<boolean> => {
 };
 
 const updateBadge = (text: string, color: string): void => {
-  try {
-    chrome.browserAction.setBadgeText({
-      text,
-    });
-    chrome.browserAction.setBadgeBackgroundColor({
-      color: isTrading ? color : '#1890ff',
-    });
-  } catch (e) { console.log(e); }
+  ChromeService.setBadgeText(text);
+  ChromeService.setBadgeBackgroundColor(isTrading ? color : '#1890ff');
 }
 
 const refresh = async () => {
@@ -39,14 +35,14 @@ const refresh = async () => {
     const fundIds: Array<string> = StorageService.getFundIds();
     if (fundIds.length) {
       const data = await EastMoneyService.getFundList(fundIds);
-      const fundListData = new FundList({
-        gzrq: data.Expansion.GZTIME.substr(5),
-        jzrq: data.Expansion.FSRQ.substr(5),
-        ids: fundIds,
-        list: data.Datas,
-      });
+      const items = new Map<string, FundDetail>();
+      if (data.Datas && data.Datas.length > 0) {
+        for (let i = 0; i < data.Datas.length; i++) {
+          items.set(data.Datas[i].FCODE, new FundDetail(data.Datas[i]));
+        }
+      }
       isTrading = await getIsTrading();
-      updateBadge(...fundListData.totalGainedExpectedString);
+      updateBadge(...FundHelper.totalGainedExpectedString(items));
     } else {
       updateBadge('', 'white');
     }
