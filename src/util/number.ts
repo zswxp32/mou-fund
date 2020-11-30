@@ -46,16 +46,15 @@ const _min3Str = (value: number, dw: string): string => {
 export const toNumberBadge = (value: number): [string, string] => {
   const pn = value !== 0 ? (value > 0 ? 1 : -1) : 0;
   const num = Math.abs(value);
-  let numStr = '0';
-  const colorStr = pn > 0 ? '#F56C6C' : '#4eb61b';
+  let numStr = '0.00';
+  const colorStr = pn >= 0 ? '#F56C6C' : '#4eb61b';
   const pnStr = pn !== 0 ? (pn > 0 ? '+' : '-') : '';
 
-  const K = 1000;
-  const M = 1000 * 1000;
-  const B = 1000 * 1000 * 1000;
-  const T = 1000 * 1000 * 1000 * 1000;
-
   if (value !== 0) {
+    const K = 1000;
+    const M = 1000 * 1000;
+    const B = 1000 * 1000 * 1000;
+    const T = 1000 * 1000 * 1000 * 1000;
     if (num < K) {
       numStr = `${pnStr}${_min3Str(num, '')}`;
     } else if (num >= K && num < M) {

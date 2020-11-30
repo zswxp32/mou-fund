@@ -7,22 +7,12 @@ import ChromeService from '@Service/chrome';
 const MAX_INTERVAL = 10 * 60 * 1000; // 10分钟
 const MIN_INTERVAL = 10 * 1000; // 10秒钟
 
-let isTrading = false;
+let isTrading: boolean = null;
 
-const getIsTrading = async (): Promise<boolean> => {
-  let isTradeTime = false;
-  const [systemTime, isTradeDay] = await EastMoneyService.getSystemTime();
-  const nowTime = new Date(systemTime);
-  const time = nowTime.getHours() + nowTime.getMinutes() / 60;
-  // time > 09:27 && time < 15:03
-  // 目的：将前后 3 分钟也视为交易时间，确保更新
-  if (time > 9.45 && time < 15.05) {
-    isTradeTime = true;
+const updateBadge = async (text: string, color: string): Promise<void> => {
+  if (isTrading === null) {
+    isTrading = await EastMoneyService.getIsTrading();
   }
-  return isTradeDay && isTradeTime;
-};
-
-const updateBadge = (text: string, color: string): void => {
   ChromeService.setBadgeText(text);
   ChromeService.setBadgeBackgroundColor(isTrading ? color : '#1890ff');
 }
@@ -30,7 +20,7 @@ const updateBadge = (text: string, color: string): void => {
 const refresh = async () => {
   const getShowBadge: boolean = StorageService.getShowBadge();
   if (!getShowBadge) {
-    updateBadge('', 'white');
+    await updateBadge('', 'white');
   } else {
     const fundIds: Array<string> = StorageService.getFundIds();
     if (fundIds.length) {
@@ -41,10 +31,9 @@ const refresh = async () => {
           items.set(data.Datas[i].FCODE, new FundDetail(data.Datas[i]));
         }
       }
-      isTrading = await getIsTrading();
-      updateBadge(...FundHelper.totalGainedExpectedString(items));
+      await updateBadge(...FundHelper.totalGainedExpectedString(items));
     } else {
-      updateBadge('', 'white');
+      await updateBadge(...FundHelper.totalGainedExpectedString(new Map<string, FundDetail>()));
     }
   }
   setTimeout(refresh, isTrading ? MIN_INTERVAL : MAX_INTERVAL);
@@ -52,10 +41,10 @@ const refresh = async () => {
 
 try {
   refresh();
-  chrome.runtime.onMessage.addListener((request) => {
+  chrome.runtime.onMessage.addListener(async (request) => {
     switch (request.type) {
-      case 'hold_changed':
-        updateBadge(...request.value as [string, string]);
+      case 'gain_changed':
+        await updateBadge(...request.value as [string, string]);
         break;
       default:
         break;

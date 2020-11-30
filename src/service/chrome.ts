@@ -1,4 +1,3 @@
-
 export default class ChromeService {
   static sendMessage(type: string, value: any): void {
     try {

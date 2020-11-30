@@ -63,8 +63,8 @@ export const ToolBar: React.FC = () => {
     {searchBoxShow && <SearchResult status={searchStatus} list={searchResult} onAddClick={onAddClick} />}
     {codes.length > 0 && <div className={styles.tools}>
       {!editing && <Switch
-        options={['标准', '简单']}
-        selected={mode === FundsMode.simplify ? '简单' : '标准'}
+        options={['标准', '简洁']}
+        selected={mode === FundsMode.simplify ? '简洁' : '标准'}
         onSwitch={onModeSwitch}
       />}
       <span className="button mr5" onClick={onEditClick}>

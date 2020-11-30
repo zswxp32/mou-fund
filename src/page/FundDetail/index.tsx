@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { useLatest } from '@Util/hooks';
@@ -17,7 +17,7 @@ type StockInfo = {
   stockIncomeEstimated: string,
 }
 
-export default function PageFundDetail(): ReactElement {
+const PageFundDetail: React.FC = () => {
   const { fundId } = useParams();
   const [stockInfos, setStockInfos] = useState<StockInfo>(null);
   const [stockTrends, setStockTrends] = useState({});
@@ -94,7 +94,7 @@ export default function PageFundDetail(): ReactElement {
                 {item.name} ({item.code})
               </div>
               <div className={styles.chart} style={{ fontSize: 0 }}>
-                <ChartCandle stockCandleData={stockTrends[item.code]} />
+                <ChartCandle data={stockTrends[item.code]} />
               </div>
               <div className="fs14">{item.price}</div>
               <div className={`bold fs14 ${toPercentColor(item.change)}`}>
@@ -121,3 +121,5 @@ export default function PageFundDetail(): ReactElement {
     </div>
   );
 }
+
+export default PageFundDetail;

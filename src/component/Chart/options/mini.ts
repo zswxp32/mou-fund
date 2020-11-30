@@ -14,9 +14,9 @@ for (let i = 0; i < 242; i++) {
   timeList.push(`${h}:${m}`);
 }
 
-const miniEchartOption = (trendsData: FundTrends) => {
+const miniEchartOption = (data: FundTrends) => {
   const changeList = [];
-  trendsData.list.forEach(str => {
+  data.list.forEach(str => {
     const temp = str.split(',');
     changeList.push(parseFloat(temp[2]));
   });
@@ -52,7 +52,7 @@ const miniEchartOption = (trendsData: FundTrends) => {
         return `
           时间：${s.axisValue}<br/>
           涨跌：<span class="${toPercentColor(s.value)}">${toPercentString(s.value, true)}</span><br/>
-          净值：${(trendsData.dwjz * (1 + parseFloat(s.value) / 100)).toFixed(4)}
+          净值：${(data.dwjz * (1 + parseFloat(s.value) / 100)).toFixed(4)}
         `;
       },
     },

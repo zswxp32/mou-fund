@@ -7,24 +7,24 @@ import { BlockLoading } from '@Component/Loading';
 import { miniEchartOption, candleEchartOption } from './options';
 
 export const ChartMini = memo(
-  ({ trendsData }: { trendsData: FundTrends }) => {
-    if (!trendsData) return <BlockLoading width='240px' height="50px" />;
-    if (trendsData.list.length === 0) return <div style={{ color: 'grey' }}>暂无走势图</div>;
+  ({ data }: { data: FundTrends }) => {
+    if (!data) return <BlockLoading width='240px' height="50px" />;
+    if (data.list.length === 0) return <div style={{ color: 'grey' }}>暂无走势图</div>;
     return <ReactEcharts
       style={{ display: 'inline-block', width: '240px', height: '50px', margin: '0 auto' }}
-      option={miniEchartOption(trendsData)}
+      option={miniEchartOption(data)}
     />;
   },
-  ({ trendsData }, { trendsData: newRrendsData }) => trendsData === newRrendsData
+  ({ data }, { data: newRrendsData }) => data === newRrendsData
 );
 
 export const ChartCandle = memo(
-  ({ stockCandleData }: { stockCandleData: any }) => {
-    if (!stockCandleData) return <BlockLoading width='240px' height="32px" />;
+  ({ data }: { data: any }) => {
+    if (!data) return <BlockLoading width='240px' height="32px" />;
     return <ReactEcharts
       style={{ display: 'inline-block', width: '240px', height: '32px', margin: '0 auto' }}
-      option={candleEchartOption(stockCandleData)}
+      option={candleEchartOption(data)}
     />;
   },
-  ({ stockCandleData }, { stockCandleData: newStockCandleData }) => stockCandleData === newStockCandleData
+  ({ data }, { data: newData }) => data === newData
 );

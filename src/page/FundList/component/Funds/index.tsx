@@ -97,7 +97,7 @@ export const Funds: React.FC = () => {
               return <Draggable key={code} draggableId={code} index={index}>
                 {(provided) => (
                   <div
-                    className={`${styles.list_line} ${mode === FundsMode.simplify ? styles.simplify : ''}`}
+                    className={`${styles.list_line} ${simplify ? styles.simplify : ''}`}
                     ref={provided.innerRef}
                     {...provided.draggableProps}
                     {...provided.dragHandleProps}
@@ -114,7 +114,7 @@ export const Funds: React.FC = () => {
                     </div>
                     {/** 涨跌走势图 */}
                     { !editing && !simplify && <div className={styles.chart} style={{ fontSize: 0 }}>
-                      <ChartMini trendsData={trends.get(code)} />
+                      <ChartMini data={trends.get(code)} />
                     </div>}
                     {/** 持有总额 */}
                     <div className={`bold fs14`}>
@@ -183,8 +183,8 @@ export const Funds: React.FC = () => {
     }
 
     const simplify = mode === FundsMode.simplify;
-    return items.size > 0 && <div className={styles.list_footer}>
-      <div className={styles.list_line}>
+    return items.size > 0 && <div className={`${styles.list_footer} ${simplify ? styles.simplify : ''}`}>
+      <div className={`${styles.list_line} ${simplify ? styles.simplify : ''}`}>
         <div className="tl">总览</div>
         {!editing && !simplify && <div className={styles.chart}></div>}
         <div className={`bold fs14`}>
@@ -194,9 +194,9 @@ export const Funds: React.FC = () => {
           <p className={`bold fs16 ${toNumberColor(FundHelper.totalGained(items))}`}>
             {FundHelper.totalPercent(items)}
           </p>
-          <p className={`bold fs14 ${toNumberColor(FundHelper.totalGained(items))}`}>
+          {!simplify && <p className={`bold fs14 ${toNumberColor(FundHelper.totalGained(items))}`}>
             {toNumberPN(FundHelper.totalGained(items))}
-          </p>
+          </p>}
         </div>
         {!editing && <div></div>}
         {!editing && <div></div>}

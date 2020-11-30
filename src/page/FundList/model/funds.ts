@@ -67,7 +67,7 @@ export const funds = createModel<RootModel>()({
 			const newItems = new Map(state.items).set(code, item);
 			const newCodes = StorageService.addFund(code);
 			StorageService.addFundHold({ code, count: 0, cost: 0 });
-			ChromeService.sendMessage('hold_changed', FundHelper.totalGainedExpectedString(newItems));
+			ChromeService.sendMessage('gain_changed', FundHelper.totalGainedExpectedString(newItems));
 			return {
 				...state,
 				codes: newCodes,
@@ -80,7 +80,7 @@ export const funds = createModel<RootModel>()({
 				const newItems = new Map(state.items);
 				newItems.delete(code);
 				const newCodes = StorageService.deleteFund(code);
-				ChromeService.sendMessage('hold_changed', FundHelper.totalGainedExpectedString(newItems));
+				ChromeService.sendMessage('gain_changed', FundHelper.totalGainedExpectedString(newItems));
 				return {
 					...state,
 					codes: newCodes,
@@ -92,7 +92,7 @@ export const funds = createModel<RootModel>()({
 		updateFundHold: (state, { code, k, v }: { code: string, k: string, v: number }): FundsState => {
 			const newItems = new Map(state.items);
 			StorageService.updateFundHold({ code: code, [k]: v });
-			ChromeService.sendMessage('hold_changed', FundHelper.totalGainedExpectedString(newItems));
+			ChromeService.sendMessage('gain_changed', FundHelper.totalGainedExpectedString(newItems));
 			return {
 				...state,
 				items: newItems,

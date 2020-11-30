@@ -61,6 +61,19 @@ export default class EastMoneyService {
     return [res.data.Datas.SystemDateTime, res.data.Datas.IsTradeDay];
   }
 
+  static async getIsTrading() : Promise<boolean> {
+    let isTradeTime = false;
+    const [systemTime, isTradeDay] = await EastMoneyService.getSystemTime();
+    const nowTime = new Date(systemTime);
+    const time = nowTime.getHours() + nowTime.getMinutes() / 60;
+    // time > 09:27 && time < 15:03
+    // 目的：将前后 3 分钟也视为交易时间，确保更新
+    if (time > 9.45 && time < 15.05) {
+      isTradeTime = true;
+    }
+    return isTradeDay && isTradeTime;
+  }
+
   static async getFundList(fundIds: string[]): Promise<any> {
     const Fcodes = fundIds.toString();
     const res = await this.instance.fundAxios.get(FundApi.FundList, {
@@ -74,7 +87,7 @@ export default class EastMoneyService {
     return res.status === 200 ? res.data : null;
   }
 
-  static async getFundStocks(fundId: string) {
+  static async getFundStocks(fundId: string): Promise<any> {
     const res = await this.instance.fundAxios.get(FundApi.FundStock, {
       params: {
         FCODE: fundId
@@ -96,17 +109,7 @@ export default class EastMoneyService {
     } : null;
   }
 
-  static async getFundJz(fundId: string) {
-    const res = await this.instance.fundAxios.get(FundApi.FundJz, {
-      params: {
-        FCODE: fundId,
-        RANGE: 'y',
-      }
-    });
-    return res.status === 200 ? res.data.Datas : null;
-  }
-
-  static async getStockList(stocks): Promise<StockInfo[]> {
+  static async getStockList(stocks: any[]): Promise<StockInfo[]> {
     const fields = 'f1,f2,f3,f4,f12,f13,f14';
     const fltt = 2;
     const secids = stocks.map((item) => `${item.NEWTEXCH}.${item.GPDM}`).toString();
@@ -120,7 +123,7 @@ export default class EastMoneyService {
     return res.status === 200 ? res.data.data.diff : null;
   }
 
-  static async getStockTrends(prefix, stockId) {
+  static async getStockTrends(prefix: number, stockId: string): Promise<any> {
     const fields1 = 'f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f11,f12,f13';
     const fields2 = 'f51,f53,f56,f58';
     const secid = `${prefix}.${stockId}`;
@@ -138,7 +141,7 @@ export default class EastMoneyService {
     return res.status === 200 ? res.data.data : null;
   }
 
-  static async searchFund(str: string) {
+  static async searchFund(str: string): Promise<any[]> {
     const res = await this.instance.searchAxis.get(SearchApi.Fund, {
       params: { m: 9, key: str, '&_': Date.now() }
     });

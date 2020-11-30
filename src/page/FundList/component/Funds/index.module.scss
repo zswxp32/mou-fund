@@ -136,6 +136,10 @@
   height: 50px;
   background: $blue1;
 
+  &.simplify {
+    height: 35px;
+  }
+
   .list_line {
     height: 100%;
 
@@ -144,6 +148,14 @@
 
       &>p:first-child {
         margin-bottom: 2px;
+      }
+    }
+
+    &.simplify {
+      height: 35px;
+
+      &>div>p:first-child {
+        margin-bottom: 0px;
       }
     }
   }
