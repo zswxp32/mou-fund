@@ -5,20 +5,18 @@ import StorageService from '@Service/storage';
 import ChromeService from '@Service/chrome';
 
 const MAX_INTERVAL = 10 * 60 * 1000; // 10分钟
-const MIN_INTERVAL = 10 * 1000; // 10秒钟
+const MIN_INTERVAL = 20 * 1000; // 20秒钟
 
 let isTrading: boolean = null;
 
 const updateBadge = async (text: string, color: string): Promise<void> => {
-  if (isTrading === null) {
-    isTrading = await EastMoneyService.getIsTrading();
-  }
   ChromeService.setBadgeText(text);
   ChromeService.setBadgeBackgroundColor(isTrading ? color : '#1890ff');
 }
 
 const refresh = async () => {
   const getShowBadge: boolean = StorageService.getShowBadge();
+  isTrading = await EastMoneyService.getIsTrading();
   if (!getShowBadge) {
     await updateBadge('', 'white');
   } else {
