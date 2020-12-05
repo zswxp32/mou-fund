@@ -23,13 +23,13 @@ const refresh = async () => {
     const fundIds: Array<string> = StorageService.getFundIds();
     if (fundIds.length) {
       const data = await EastMoneyService.getFundList(fundIds);
-      const items = new Map<string, FundDetail>();
-      if (data.Datas && data.Datas.length > 0) {
+      if (data !== null || data.Datas || data.Datas.length > 0) {
+        const items = new Map<string, FundDetail>();
         for (let i = 0; i < data.Datas.length; i++) {
           items.set(data.Datas[i].FCODE, new FundDetail(data.Datas[i]));
         }
+        await updateBadge(...FundHelper.totalGainedExpectedString(items));
       }
-      await updateBadge(...FundHelper.totalGainedExpectedString(items));
     } else {
       await updateBadge(...FundHelper.totalGainedExpectedString(new Map<string, FundDetail>()));
     }
