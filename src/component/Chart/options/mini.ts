@@ -100,11 +100,11 @@ const miniEchartOption = (data: FundTrends) => {
       {
         type: 'line',
         areaStyle: {
-          color: '#bae7ff', // $blue2
+          color: changeList[changeList.length - 1] > 0 ? 'rgba(255,0,0,0.1)' : 'rgba(0,128,0,0.1)', // $blue2
         },
         lineStyle: {
-          width: 2,
-          color: '#69c0ff', // $blue4
+          width: 1,
+          color: changeList[changeList.length - 1] > 0 ? 'red' : 'green', // $blue4
         },
         data: changeList,
         markPoint: {
