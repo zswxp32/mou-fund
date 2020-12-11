@@ -216,8 +216,8 @@ export const Funds: React.FC = () => {
     const classNames = [styles.tips];
     let tipText = '';
     if (item.gainedExpected !== null) {
+      if (simplify) classNames.push(styles.simplify);
       if (item.updated) {
-        if (simplify) classNames.push(styles.simplify);
         classNames.push(styles.updated);
         tipText = !simplify ? '净值已更新' : '新';
       } else {
