@@ -15,6 +15,7 @@ type StockInfo = {
   list: any[],
   stockProportionTotal: string,
   stockIncomeEstimated: string,
+  date: string,
 }
 
 const PageFundDetail: React.FC = () => {
@@ -26,14 +27,14 @@ const PageFundDetail: React.FC = () => {
 
   useEffect(() => {
     const load = async () => {
-      const fundStocks = await EastMoneyService.getFundStocks(fundId);
-      const stockInfosRes = await EastMoneyService.getStockList(fundStocks);
+      const fundStockInfo = await EastMoneyService.getFundStocks(fundId);
+      const stockInfosRes = await EastMoneyService.getStockList(fundStockInfo.stocks);
 
       let stockProportionTotal = 0;
       let stockIncomeEstimated = 0;
 
       const _stockInfos = stockInfosRes.map((item) => {
-        const stock = fundStocks.find(s => s.GPDM === item.f12);
+        const stock = fundStockInfo.stocks.find(s => s.GPDM === item.f12);
         stockProportionTotal += parseFloat(stock.JZBL);
         stockIncomeEstimated += stock.JZBL * item.f3 / 100;
         return {
@@ -50,6 +51,7 @@ const PageFundDetail: React.FC = () => {
         list: _stockInfos,
         stockProportionTotal: stockProportionTotal.toFixed(2),
         stockIncomeEstimated: stockIncomeEstimated.toFixed(2),
+        date: fundStockInfo.date,
       });
     };
     load();
@@ -74,7 +76,7 @@ const PageFundDetail: React.FC = () => {
     <div className="container">
       <div className={styles.title}>
         <Back />
-        <span>重仓股票明细</span>
+        <span>重仓股票明细 ({stockInfos.date})</span>
       </div>
 
       <div className={styles.list}>

@@ -4,8 +4,8 @@ import EastMoneyService from '@Service/eastmoney';
 import StorageService from '@Service/storage';
 import ChromeService from '@Service/chrome';
 
-const MAX_INTERVAL = 10 * 60 * 1000; // 10分钟
-const MIN_INTERVAL = 20 * 1000; // 20秒钟
+const MAX_INTERVAL = 5 * 60 * 1000; // 5 分钟
+const MIN_INTERVAL = 15 * 1000; // 15 秒钟
 
 let isTrading: boolean = null;
 

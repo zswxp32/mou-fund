@@ -57,21 +57,28 @@ export default class EastMoneyService {
   }
 
   static async getSystemTime(): Promise<[string, boolean]> {
-    const res = await this.instance.fundAxios.get(FundApi.SystemTime);
-    return [res.data.Datas.SystemDateTime, res.data.Datas.IsTradeDay];
+    try {
+      const res = await this.instance.fundAxios.get(FundApi.SystemTime);
+      return [res.data.Datas.SystemDateTime, res.data.Datas.IsTradeDay];
+    } catch (e) {
+      return [null, null];
+    }
   }
 
-  static async getIsTrading() : Promise<boolean> {
+  static async getIsTrading(): Promise<boolean> {
     let isTradeTime = false;
     const [systemTime, isTradeDay] = await EastMoneyService.getSystemTime();
-    const nowTime = new Date(systemTime);
-    const time = nowTime.getHours() + nowTime.getMinutes() / 60;
-    // time > 09:27 && time < 15:03
-    // 目的：将前后 3 分钟也视为交易时间，确保更新
-    if (time > 9.45 && time < 15.05) {
-      isTradeTime = true;
+    if (systemTime != null) {
+      const nowTime = new Date(systemTime);
+      const time = nowTime.getHours() + nowTime.getMinutes() / 60;
+      // time > 09:27 && time < 15:03
+      // 目的：将前后 3 分钟也视为交易时间，确保更新
+      if (time > 9.45 && time < 15.05) {
+        isTradeTime = true;
+      }
+      return isTradeDay && isTradeTime;
     }
-    return isTradeDay && isTradeTime;
+    return true;
   }
 
   static async getFundList(fundIds: string[]): Promise<any> {
@@ -93,7 +100,10 @@ export default class EastMoneyService {
         FCODE: fundId
       },
     });
-    return res.status === 200 ? res.data.Datas.fundStocks : null;
+    return res.status === 200 ? {
+      stocks: res.data.Datas.fundStocks,
+      date: res.data.Expansion,
+    } : null;
   }
 
   static async getFundTrends(fundId: string): Promise<FundTrends> {
